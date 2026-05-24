@@ -1,0 +1,38 @@
+.risk-page{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    margin: 0px;
+}
+
+.risk-filters{
+    display: flex;
+    flex-direction: row;
+    gap:40px;
+    padding-bottom: 14px;
+}
+
+.risk-components{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+
+    height: 100%;
+}
+
+.risk-table{
+    grid-area: 1 / 1 / 2 / 5;
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.risk-user-info{
+    grid-area: 1 / 5 / 2 / 6;
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}

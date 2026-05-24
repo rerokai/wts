@@ -7,7 +7,8 @@
   --border: rgba(202, 202, 202, 0.7);
   --border-o: rgba(202, 202, 202, 0.3);
 
-  --green: rgba(107, 255, 149, 1);
+  --green: 107, 255, 149;
+  --greendark: 43, 88, 92;
 
   --text: rgba(68, 87, 89, 1)
 }

@@ -11,6 +11,7 @@
     width: 14%;
     background-color: var(--bg-panel);
     border-right: solid 1px var(--border);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 .panel-sidebar_logo{
@@ -27,15 +28,19 @@
     width: 90%;
     border-right: solid 10px var(--bg-panel);
     border-radius: 5px;
+    outline: none;
+    
 }
 
 .panel-nav:hover{
-    outline: solid 1px var(--border);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    /*outline: solid 1px var(--border);*/
+    transition: 0.3s;
 }
 
 .panel-nav.active{
     border-right: solid 10px var(--green);
-    outline: outset 1px var(--border-o);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
 }
 
