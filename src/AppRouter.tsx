@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ProfilePage } from "./pages/Panel/ProfilePage";
+import { ProfilePage } from "./pages/Panel/profile/ProfilePage";
 import { RiskPage } from "./pages/Panel/RiskPage";
 import { MapPage } from "./pages/Panel/MapPage";
 import { IntroPage } from "./pages/Intro/IntroPage";
