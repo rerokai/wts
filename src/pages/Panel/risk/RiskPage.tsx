@@ -2,11 +2,8 @@ import "./risk.css"
 import { Accuracy } from "../Accuracy"
 import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from "@/components/ui/select"
 import { SearchIcon } from "lucide-react"
-import {
-  Field,
-  FieldDescription,
-  FieldLabel,
-} from "@/components/ui/field"
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/ui/button";
 import {
   InputGroup,
   InputGroupAddon,
@@ -14,6 +11,9 @@ import {
 } from "@/components/ui/input-group"
 
 export function RiskPage(){
+
+    const { user, logout } = useAuth();
+    
     return(
         <div className="risk-page">
             
@@ -88,7 +88,12 @@ export function RiskPage(){
                 <div className="risk-table"><Accuracy/></div>
                 <div className="risk-user-info">user stats</div>
             </div>
-            
+                <div>
+                <h1>Профиль</h1>
+                <p>Email: {user?.email}</p>
+                <p>Роль: {user?.role}</p>
+                <Button onClick={logout}>Выйти</Button>
+                </div>
         </div>
     )
 }

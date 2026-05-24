@@ -1,20 +1,34 @@
-// src/lib/apiClient.ts
+// src/lib/api.ts
 import { Api } from '../api/backendApi';
 
-// Базовый URL бэкенда (может быть из переменных окружения)
 const BASE_URL = 'http://127.0.0.1:8000';
 
-// Создаём экземпляр API
-export const apiClient = new Api({
-  baseURL: BASE_URL,
-  // Настройка заголовков (будет динамически добавлять токен)
+export const api = new Api({
+  baseUrl: BASE_URL,
+  securityWorker: (securityData: { token: string } | null) => {
+    if (securityData?.token) {
+      return {
+        headers: {
+          Authorization: `Bearer ${securityData.token}`,
+        },
+      };
+    }
+    return {};
+  },
 });
 
-// Функция для установки токена после логина
 export function setAuthToken(token: string | null) {
   if (token) {
-    apiClient.instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    api.setSecurityData({ token });
+    localStorage.setItem('accessToken', token);
   } else {
-    delete apiClient.instance.defaults.headers.common['Authorization'];
+    api.setSecurityData(null);
+    localStorage.removeItem('accessToken');
   }
+}
+
+// Восстанавливаем токен при загрузке
+const savedToken = localStorage.getItem('accessToken');
+if (savedToken) {
+  setAuthToken(savedToken);
 }
