@@ -36,3 +36,16 @@
     border-radius: 14px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 }
+
+/* Отключаем ring и border у InputGroup при фокусе на инпуте */
+[data-slot="input-group"]:has([data-slot="input-group-control"]:focus-visible) {
+  outline: none !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  border-color: #e2e8f0 !important; /* или цвет вашей обычной границы */
+}
+
+/* Дополнительно, если инпут сам даёт outline */
+[data-slot="input-group-control"]:focus-visible {
+  outline: none !important;
+  
+}

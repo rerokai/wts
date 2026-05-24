@@ -1,4 +1,6 @@
 import "./profile.css"
+import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from "@/components/ui/select"
+import { DatePickerDemo } from "@/components/ui/date-picker"
 
 export function WorkExceptions(){
     return(
@@ -30,25 +32,33 @@ export function WorkExceptions(){
                     </div>
                 </div>
             </div>
+            
             <div className="add-except">
+                <div className="title">
+                Добавить исключение
+            </div>
                 <div className="new-except-info">
                     <div>Категория:</div>
-                    <select name="colors">
-                        <option value="1">Синий</option>
-                        <option value="2" selected>Зеленый</option>
-                        <option value="3">Желтый</option>
-                        <option value="4">Красный</option>
-                        <option value="5">Оранжевый</option>
-                        <option value="6">Черный</option>
-                    </select>
+                    <Select>
+                    <SelectTrigger className="w-[180px] pl-[10px]">
+                        <SelectValue placeholder="Выбрать отдел" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                        <SelectItem value="it">ИТ</SelectItem>
+                        <SelectItem value="mark">Маркетинг</SelectItem>
+                        <SelectItem value="reklama">Реклама</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                    </Select>
                 </div>
                 <div className="new-except-info">
                     <div>Дата начала:</div>
-                    <input type="date" id="birthday" name="birthday" className="date-input"/>
+                    <DatePickerDemo/>
                 </div>
                 <div className="new-except-info">
                     <div>Дата конца:</div>
-                    <input type="date" id="birthday" name="birthday" className="date-input"/>
+                    <DatePickerDemo/>
                 </div>
                 <button className="new-except-buttn">
                     Добавить исключение

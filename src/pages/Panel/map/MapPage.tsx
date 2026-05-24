@@ -1,4 +1,5 @@
 import "./map.css"
+import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from "@/components/ui/select"
 
 export function MapPage(){
 
@@ -7,21 +8,32 @@ export function MapPage(){
             
             <div className="map-filters"> 
                 <div className="mep-period-f">
-                    <select name="data">
-                        <option value='apple'>Яблоко</option>
-                        <option value='banana'>Банан</option>
-                        <option value='orange'>Апельсин</option>
-                    </select>
+                    <Select>
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Выбрать месяц" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                        <SelectItem value="it">Май</SelectItem>
+                        <SelectItem value="mark">Июнь</SelectItem>
+                        <SelectItem value="reklama">Июль</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                    </Select>
                 </div>
                 <div className="mep-otdel-f">
-                    <select name="colors">
-                        <option value="1">Синий</option>
-                        <option value="2" selected>Зеленый</option>
-                        <option value="3">Желтый</option>
-                        <option value="4">Красный</option>
-                        <option value="5">Оранжевый</option>
-                        <option value="6">Черный</option>
-                    </select>
+                    <Select>
+                    <SelectTrigger className="w-[180px] pl-[10px]">
+                        <SelectValue placeholder="Выбрать отдел" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                        <SelectItem value="it">ИТ</SelectItem>
+                        <SelectItem value="mark">Маркетинг</SelectItem>
+                        <SelectItem value="reklama">Реклама</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                    </Select>
                 </div>
             </div>
             

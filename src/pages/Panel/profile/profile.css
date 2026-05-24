@@ -8,7 +8,7 @@
 
 .user-name{
     padding-bottom: 14px;
-    font-size: 28px;
+    font-size: 24px;
 }
 
 .profile-components{
@@ -60,14 +60,14 @@
 
 .components-data{
     flex-direction: column;
-    gap:10px;
-    padding: 10px;
+    gap:8px;
+    padding: 0px 10px;
     align-items: center;
     justify-content: center;
 }
 
 .title{
-    padding: 10px 0px;
+    padding: 20px 0px;
     font-size: 17px;
     text-align: center;
     color: rgba(var(--greendark), 1)
@@ -77,8 +77,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 10px 10px;
-    gap:20px;
+    padding: 0px 10px;
+    gap:18px;
 }
 
 .pers-data-item{
@@ -120,7 +120,7 @@
 }
 
 .except-info{
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .new-except-buttn{
@@ -132,14 +132,15 @@
     font-size: 14px;
     vertical-align:middle;
 
-    padding: 0px 0px;
+    padding: 10px 0px;
+    margin: 10px 0px;
     gap:10px;
 
-    width: 300px;
+    width: 100%;
     height: 36px;
 
     color: rgba(var(--greendark), 1);
-    background-color: var(--border-o);
+    background-color:white;
     border: solid 1px var(--border);
     border-radius: 8px;
     transition: 0.2s;
@@ -148,6 +149,22 @@
 .new-except-buttn:hover{
     cursor: pointer;
     box-shadow: inset 0 0 20px var(--border-o), 0 0 20px var(--border-o);
-    
-    
 }
+
+.new-except-info{
+    opacity: 0.9;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 0px;
+}
+
+.add-except{
+    padding:  60px 10px 0px 10px;
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+

@@ -23,6 +23,18 @@
     height: 100%;
 }
 
+[data-slot="select-trigger"] {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+[data-slot="select-content"] {
+  padding: 7px 10px !important;
+  
+}
+
 .temp-map{
     grid-area: 1 / 1 / 2 / 5;
     background-color: var(--bg-components);
