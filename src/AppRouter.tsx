@@ -13,8 +13,9 @@ export function AppRouter(){
         <BrowserRouter>
 
             <Routes>
-                <Route path="/" element ={<IntroPage/>}>
-                    <Route path="login" element ={<LoginPage/>}/>
+                <Route path="/" element={<IntroPage />}>
+                    <Route index element={<LoginPage />} />
+                    <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<RegisterPage />} />
                 </Route>
                 <Route path="/panel" element = {<PanelRouter/>}>
