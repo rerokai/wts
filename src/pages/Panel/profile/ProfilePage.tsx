@@ -6,6 +6,7 @@ import { WorkShedule } from './WorkSchedule';
 import { WorkExceptions } from './WorkExceptions';
 import type { Employee, Team } from '@/api/backendApi';
 import './profile.css';
+import { Workload } from './Workload';
 
 export function ProfilePage() {
   const { user } = useAuth();
@@ -33,15 +34,14 @@ export function ProfilePage() {
     fetchData();
   }, [user]);
 
-  if (loading) return <div>Загрузка...</div>;
+  if (loading) return <div></div>;
   if (!employee) return <div>Нет данных сотрудника</div>;
 
-  // patronymic отсутствует в API, пока сделаем заглушку
   const fullName = `${employee.last_name} ${employee.first_name}`;
 
   return (
     <div className="profile-page">
-      <h1 className="user-name">{fullName}</h1>
+      
       <div className="profile-components">
         <div className="personal-details">
           <PersonalData employee={employee} user={user!} team={team} />
@@ -53,7 +53,7 @@ export function ProfilePage() {
           <WorkExceptions employeeId={employee.id} />
         </div>
         <div className="risk-conflicts">risk-conflicts</div>
-        <div className="workload">workload</div>
+        <div className="workload"><Workload/></div>
       </div>
     </div>
   );
