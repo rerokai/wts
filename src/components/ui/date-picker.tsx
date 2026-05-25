@@ -31,7 +31,7 @@ export function DatePickerDemo({ date: externalDate, setDate: externalSetDate }:
           className="w-[180px] !px-[10px] bg-white shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] justify-start text-left font-normal data-[empty=true]:text-muted-foreground"
         >
           <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {date ? format(date, "PPP") : <span>Выбрать дату</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
