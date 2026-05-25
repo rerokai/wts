@@ -67,13 +67,21 @@
 }
  
 .title{
-    padding: 20px 0px;
+    padding: 30px 0px;
+    font-size: 17px;
+    text-align: center;
+    color: rgba(var(--greendark), 1)
+}
+
+.title-q{
+    padding: 15px 0px;
     font-size: 17px;
     text-align: center;
     color: rgba(var(--greendark), 1)
 }
 
 .pers-data-list{
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -82,10 +90,11 @@
 }
 
 .pers-data-item{
+    font-size: 15px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    font-size: 16px;
+    
 }
 
 .pers-data-title{

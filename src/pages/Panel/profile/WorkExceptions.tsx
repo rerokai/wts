@@ -33,7 +33,7 @@ export function WorkExceptions({ employeeId }: WorkExceptionsProps) {
       </div>
 
       <div className="add-except">
-        <div className="title">Добавить исключение</div>
+        <div className="title-q">Добавить исключение</div>
         <div className="new-except-info">
           <div>Категория:</div>
           <Select>
