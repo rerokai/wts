@@ -38,7 +38,7 @@ export function WorkShedule({ employeeId }: WorkSheduleProps) {
       </div>
       <div className="last-update">
         <div className="lat-update-title">Дата последнего обновления</div>
-        <div className="lat-update-date">—</div>
+        <div className="lat-update-date">24.03.2026</div>
       </div>
       <div className="accu-btn"><Accuracy /></div>
     </div>

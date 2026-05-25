@@ -10,8 +10,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function DatePickerDemo() {
-  const [date, setDate] = React.useState<Date>()
+interface DatePickerDemoProps {
+  date?: Date;
+  setDate?: (date: Date | undefined) => void;
+}
+
+export function DatePickerDemo({ date: externalDate, setDate: externalSetDate }: DatePickerDemoProps) {
+  const [internalDate, setInternalDate] = React.useState<Date | undefined>(undefined);
+  
+  // Если переданы пропсы – используем их, иначе внутреннее состояние
+  const date = externalDate !== undefined ? externalDate : internalDate;
+  const setDate = externalSetDate || setInternalDate;
 
   return (
     <Popover>
@@ -29,5 +38,5 @@ export function DatePickerDemo() {
         <Calendar mode="single" selected={date} onSelect={setDate} />
       </PopoverContent>
     </Popover>
-  )
+  );
 }

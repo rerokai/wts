@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from "@/components/ui/select";
 import './profile.css';
+import { DatePickerDemo } from '@/components/ui/date-picker';
 
 // Иконка для больничного (первая SVG)
 const SickIcon = () => (
@@ -72,15 +73,14 @@ const formatDate = (dateStr: string) => {
 };
 
 export function WorkExceptions({ employeeId }: WorkExceptionsProps) {
-  // Начальные исключения – статические примеры
   const [exceptions, setExceptions] = useState<ExceptionItem[]>([
     { id: 1, type: 'business_trip', startDate: '2026-04-13', endDate: '2026-04-18' },
     { id: 2, type: 'vacation', startDate: '2026-04-13', endDate: '2026-04-18' },
   ]);
 
   const [newType, setNewType] = useState('vacation');
-  const [newStartDate, setNewStartDate] = useState('');
-  const [newEndDate, setNewEndDate] = useState('');
+  const [newStartDate, setNewStartDate] = useState<Date | undefined>(undefined);
+  const [newEndDate, setNewEndDate] = useState<Date | undefined>(undefined);
 
   const handleAddException = () => {
     if (!newStartDate || !newEndDate) {
@@ -97,15 +97,20 @@ export function WorkExceptions({ employeeId }: WorkExceptionsProps) {
       {
         id: newId,
         type: newType,
-        startDate: newStartDate,
-        endDate: newEndDate,
+        startDate: newStartDate.toISOString().split('T')[0],
+        endDate: newEndDate.toISOString().split('T')[0],
       },
     ]);
-    // Сброс формы
-    setNewType('vacation');
-    setNewStartDate('');
-    setNewEndDate('');
+    setNewStartDate(undefined);
+    setNewEndDate(undefined);
   };
+
+  const formatDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}.${month}.${year.slice(-2)}`;
+  };
+
+  // ... остальное (getIcon, getTypeLabel) без изменений
 
   return (
     <div className="components-data">
@@ -140,11 +145,11 @@ export function WorkExceptions({ employeeId }: WorkExceptionsProps) {
         </div>
         <div className="new-except-info">
           <div>Дата начала:</div>
-          <input type="date" value={newStartDate} onChange={(e) => setNewStartDate(e.target.value)} />
+          <DatePickerDemo date={newStartDate} setDate={setNewStartDate} />
         </div>
         <div className="new-except-info">
           <div>Дата конца:</div>
-          <input type="date" value={newEndDate} onChange={(e) => setNewEndDate(e.target.value)} />
+          <DatePickerDemo date={newEndDate} setDate={setNewEndDate} />
         </div>
         <button className="new-except-buttn" onClick={handleAddException}>
           Добавить исключение
