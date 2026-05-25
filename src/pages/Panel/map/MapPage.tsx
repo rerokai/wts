@@ -5,6 +5,9 @@ import { UsersInfoPanel } from './UsersInfoPanel';
 import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from '@/components/ui/select';
 import { mockEmployees, mockSchedules, mockExceptions, Employee } from '@/mocks/teamData';
 import './map.css';
+import { openGoogleCalendar } from '@/googleCalendar';
+import { format } from 'date-fns';
+
 
 export function MapPage() {
   const [selectedMonth, setSelectedMonth] = useState('4');
@@ -30,9 +33,38 @@ export function MapPage() {
     setSelectedCell({ date, hour, available, unavailable });
   };
 
+  
+
   const handleScheduleMeeting = () => {
-    alert('Здесь будет открыта форма создания встречи');
-  };
+  const { date, hour, available } = selectedCell;
+  if (!date || hour === null || available.length === 0) {
+    alert('Нет доступных сотрудников для встречи');
+    return;
+  }
+
+  const guestEmails = available
+    .map(emp => (emp as any).email)  // предполагаем, что у Employee есть email
+    .filter((email: string) => email && email.includes('@'));
+
+  if (guestEmails.length === 0) {
+    alert('У доступных сотрудников нет email для приглашения');
+    return;
+  }
+
+  const startDateTime = new Date(date);
+  startDateTime.setHours(hour, 0, 0, 0);
+  const endDateTime = new Date(date);
+  endDateTime.setHours(hour + 1, 0, 0, 0);
+
+  openGoogleCalendar({
+    title: "Встреча команды",
+    description: `Обсуждение текущих задач`,
+    start: startDateTime,
+    end: endDateTime,
+    guests: guestEmails,
+  });
+};
+
 
   return (
     <div className="map-page">

@@ -3,6 +3,9 @@ import { ru } from 'date-fns/locale';
 import { Employee } from '@/mocks/teamData';
 import './map.css';
 
+import { openGoogleCalendar } from '@/googleCalendar';
+
+
 interface UsersInfoPanelProps {
   selectedDate: Date | null;
   selectedHour: number | null;
@@ -29,10 +32,13 @@ export function UsersInfoPanel({
     );
   }
 
+  
   const formattedDate = format(selectedDate, 'd MMMM, yyyy', { locale: ru });
   const total = availableEmployees.length + unavailableEmployees.length;
   const percent = total > 0 ? (availableEmployees.length / total) * 100 : 0;
 
+  
+  
   return (
     <div className="users-info-panel">
       <div className="panel-header">
@@ -62,7 +68,7 @@ export function UsersInfoPanel({
           </div>
         </div>
 
-        {/* Доступны */}
+        
         <div className="users-section">
           <div className="section-title">Доступны</div>
           <div className="available-list">
@@ -79,7 +85,7 @@ export function UsersInfoPanel({
         </div>
       </div>
 
-      {/* Кнопка — меньше и внутри компонента */}
+      
       <button className="schedule-meeting-btn-small" onClick={onScheduleMeeting}>
         Назначить встречу
       </button>
