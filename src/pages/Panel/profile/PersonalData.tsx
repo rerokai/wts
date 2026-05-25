@@ -10,7 +10,7 @@ interface PersonalDataProps {
 export function PersonalData({ employee, user, team }: PersonalDataProps) {
   const fullName = `${employee.last_name} ${employee.first_name}`;
   
-  
+  const position = 'Главный Менеджер';
   const patronymic = '';
 
   return (
@@ -21,7 +21,10 @@ export function PersonalData({ employee, user, team }: PersonalDataProps) {
           <div className="pers-data-title">ФИО</div>
           <div className="pers-data-info">{fullName} {patronymic}</div>
         </div>
-        
+        <div className="pers-data-item">
+          <div className="pers-data-title">Должность</div>
+          <div className="pers-data-info">{position}</div>
+        </div>
         <div className="pers-data-item">
           <div className="pers-data-title">Отдел</div>
           <div className="pers-data-info">{team?.name || '—'}</div>
