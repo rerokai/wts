@@ -37,7 +37,17 @@ export const mockEmployees = [
   { id: 2, first_name: 'Петр', last_name: 'Сидоров', user_id: 102, team_id: 1, is_active: true, patronymic: 'Олегович', position: 'Разработчик' },
   { id: 3, first_name: 'Алексей', last_name: 'Смирнов', user_id: 103, team_id: 1, is_active: true, patronymic: 'Алексеевич', position: 'Аналитик' },
   { id: 4, first_name: 'Дмитрий', last_name: 'Козлов', user_id: 104, team_id: 1, is_active: true, patronymic: 'Дмитриевич', position: 'DevOps' },
-  { id: 5, first_name: 'Екатерина', last_name: 'Волкова', user_id: 105, team_id: 1, is_active: true, patronymic: 'Андреевна', position: 'Тестировщик' },
+  {
+  id: 5,
+  first_name: 'Иван',
+  last_name: 'Менеджеров',
+  user_id: 21,
+  team_id: 1, 
+  is_active: true,
+  patronymic: 'Петрович',
+  position: 'Менеджер',
+  email: 'manager@example.com', 
+},
   { id: 6, first_name: 'Михаил', last_name: 'Новиков', user_id: 106, team_id: 1, is_active: true, patronymic: 'Михайлович', position: 'Frontend' },
   { id: 7, first_name: 'Анна', last_name: 'Морозова', user_id: 107, team_id: 1, is_active: true, patronymic: 'Сергеевна', position: 'Backend' },
   { id: 8, first_name: 'Сергей', last_name: 'Лебедев', user_id: 108, team_id: 1, is_active: true, patronymic: 'Николаевич', position: 'Мобильный разработчик' },
@@ -55,6 +65,7 @@ export const mockEmployees = [
   { id: 18, first_name: 'Катерина', last_name: 'Белова', user_id: 118, team_id: 3, is_active: true, patronymic: 'Анатольевна', position: 'HR-менеджер' },
   { id: 19, first_name: 'Светлана', last_name: 'Некрасова', user_id: 119, team_id: 3, is_active: true, patronymic: 'Евгеньевна', position: 'Секретарь' },
   { id: 20, first_name: 'Григорий', last_name: 'Соловьев', user_id: 120, team_id: 3, is_active: true, patronymic: 'Борисович', position: 'Водитель' },
+  
 ];
 
 // Расписания для каждого сотрудника

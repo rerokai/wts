@@ -38,8 +38,11 @@ export const riskData: Record<number, EmployeeRiskDetails> = {
   },
   2: {
     actuality: { status: "Устарела", days: 45, percent: 45 },
-    meetingsOutsideTime: [],
-    conflicts: ["Не обновлял график 2 месяца"],
+    meetingsOutsideTime: [
+      { date: "20.05", time: "21:00", title: "Созвон с партнёрами" },
+      { date: "22.05", time: "20:30", title: "Планёрка отдела" }
+    ],
+    conflicts: ["Часовой пояс MSK+1, а встречи в MSK", "Не обновлял график 2 месяца"],
     load: 110,
     timezone: "MSK+1",
     integralRisk: 92,
@@ -60,14 +63,18 @@ export const riskData: Record<number, EmployeeRiskDetails> = {
     timezone: "MSK+2",
     integralRisk: 95,
   },
+  
   5: {
-    actuality: { status: "Подтверждена", days: 5, percent: 95 },
-    meetingsOutsideTime: [],
-    conflicts: [],
-    load: 45,
-    timezone: "MSK",
-    integralRisk: 15,
-  },
+  actuality: { status: "Устарела", days: 45, percent: 45 },
+  meetingsOutsideTime: [
+    { date: "20.05", time: "21:00", title: "Созвон с партнёрами" },
+    { date: "22.05", time: "20:30", title: "Планёрка отдела" }
+  ],
+  conflicts: ["Часовой пояс MSK+1, а встречи в MSK", "Не обновлял график 2 месяца"],
+  load: 110,
+  timezone: "MSK+1",
+  integralRisk: 92,
+},
   6: {
     actuality: { status: "Подтверждена", days: 18, percent: 82 },
     meetingsOutsideTime: [{ date: "10.05", time: "22:00", title: "Деплой" }],

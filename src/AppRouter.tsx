@@ -14,14 +14,14 @@ export function AppRouter() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* Публичные маршруты */}
+          
           <Route path="/" element={<IntroPage />}>
             <Route index element={<LoginPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
           </Route>
 
-          {/* Защищённые маршруты панели */}
+          
           <Route
             path="/panel"
             element={

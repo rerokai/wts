@@ -7,6 +7,8 @@ import { WorkExceptions } from './WorkExceptions';
 import type { Employee, Team } from '@/api/backendApi';
 import './profile.css';
 import { Workload } from './Workload';
+import { RiskDetailPanel } from '../risk/RiskDetailPanel';
+import { riskData } from '../risk/riskData';
 
 export function ProfilePage() {
   const { user } = useAuth();
@@ -37,11 +39,11 @@ export function ProfilePage() {
   if (loading) return <div></div>;
   if (!employee) return <div>Нет данных сотрудника</div>;
 
-  const fullName = `${employee.last_name} ${employee.first_name}`;
-
+  const employeeDetails = riskData[employee.id] || null;
+  console.log("Employee ID:", employee.id, "Email:", user?.email);
+  
   return (
     <div className="profile-page">
-      
       <div className="profile-components">
         <div className="personal-details">
           <PersonalData employee={employee} user={user!} team={team} />
@@ -52,8 +54,12 @@ export function ProfilePage() {
         <div className="work-exceptions">
           <WorkExceptions employeeId={employee.id} />
         </div>
-        <div className="risk-conflicts">risk-conflicts</div>
-        <div className="workload"><Workload/></div>
+        <div className="risk-conflicts">
+          <RiskDetailPanel employee={employee} details={employeeDetails} />
+        </div>
+        <div className="workload">
+          <Workload />
+        </div>
       </div>
     </div>
   );
