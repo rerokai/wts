@@ -32,13 +32,10 @@ export function UsersInfoPanel({
     );
   }
 
-  
   const formattedDate = format(selectedDate, 'd MMMM, yyyy', { locale: ru });
   const total = availableEmployees.length + unavailableEmployees.length;
   const percent = total > 0 ? (availableEmployees.length / total) * 100 : 0;
 
-  
-  
   return (
     <div className="users-info-panel">
       <div className="panel-header">

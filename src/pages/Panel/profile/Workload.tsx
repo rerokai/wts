@@ -1,7 +1,6 @@
 "use client";
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp } from "lucide-react";
 
 // Пример данных – позже замените на реальные из API
 const chartData = [

@@ -28,6 +28,7 @@
     background-color: var(--bg-components);
     border-radius: 14px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%;
 }
 
 .risk-conflicts{
@@ -56,6 +57,7 @@
     background-color: var(--bg-components);
     border-radius: 14px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 .components-data{
@@ -82,12 +84,21 @@
 }
 
 .pers-data-list{
-    
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 0px 10px;
     gap:18px;
+}
+
+.pers-data-list-exceptions{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0px 10px;
+    gap:18px;
+    overflow-y: auto;
+    height: 160px;
 }
 
 .pers-data-item{

@@ -8,6 +8,12 @@ import { IntroPage } from "./pages/Intro/IntroPage";
 import { PanelRouter } from "./pages/Panel/layout/PanelRouter";
 import { LoginPage } from "./pages/Intro/LoginPage";
 import { RegisterPage } from "./pages/Intro/RegisterPage";
+import { DashboardPage } from "./pages/Panel/dashboard/Dashboard";
+import { CalendarPage } from "./pages/Panel/calendar/CalendarPage";
+import { EmployeePage } from "./pages/Panel/employee/EmployeePage";
+import { MeetingPage } from "./pages/Panel/meeting/MeetingPage";
+import { WorkloadPage } from "./pages/Panel/workload/WorkloadPage";
+import { IntegrationsPage } from "./pages/Panel/integrations/IntergationsPage";
 
 export function AppRouter() {
   return (
@@ -30,9 +36,15 @@ export function AppRouter() {
               </PrivateRoute>
             }
           >
+            <Route path="dashboard" element={<DashboardPage/>}/>
             <Route path="profile" element={<ProfilePage />} />
             <Route path="map" element={<MapPage />} />
+            <Route path="calendar" element={<CalendarPage/>}/>
             <Route path="risk" element={<RiskPage />} />
+            <Route path="employee" element={<EmployeePage />} />
+            <Route path="meeting" element={<MeetingPage />} />
+            <Route path="workload" element={<WorkloadPage />} />
+            <Route path="integrations" element={<IntegrationsPage/>} />
           </Route>
         </Routes>
       </AuthProvider>

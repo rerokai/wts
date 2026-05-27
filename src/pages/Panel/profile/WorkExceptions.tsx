@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrig
 import './profile.css';
 import { DatePickerDemo } from '@/components/ui/date-picker';
 
-// Иконка для больничного (первая SVG)
+// Иконка для больничного 
 const SickIcon = () => (
   <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M13.2037 11.7296C14.0543 11.5569 14.8104 11.0743 15.3251 10.3755C15.8399 9.67663 16.0767 8.81145 15.9895 7.94788C15.9022 7.0843 15.4972 6.28395 14.8531 5.70219C14.209 5.12042 13.3716 4.79875 12.5037 4.79962H11.6217C11.3897 3.90175 10.9385 3.07552 10.3084 2.39511C9.6783 1.71471 8.8891 1.20143 8.01164 0.901368C7.13418 0.601301 6.19595 0.523836 5.28116 0.675929C4.36637 0.828022 3.50367 1.20491 2.77052 1.77276C2.03736 2.34061 1.4567 3.08164 1.08067 3.92932C0.704634 4.777 0.544998 5.7048 0.616092 6.62942C0.687186 7.55403 0.986784 8.44652 1.48799 9.22675C1.9892 10.007 2.67632 10.6505 3.48766 11.0996" stroke="#284C50" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -11,7 +11,7 @@ const SickIcon = () => (
   </svg>
 );
 
-// Иконка для отпуска (вторая SVG)
+// Иконка для отпуска 
 const VacationIcon = () => (
   <svg width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M8.59921 12.2366C10.6075 12.2366 12.2355 10.6086 12.2355 8.60025C12.2355 6.59193 10.6075 4.96387 8.59921 4.96387C6.59093 4.96387 4.96289 6.59193 4.96289 8.60025C4.96289 10.6086 6.59093 12.2366 8.59921 12.2366Z" stroke="#2B585C" strokeOpacity="1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -26,7 +26,7 @@ const VacationIcon = () => (
   </svg>
 );
 
-// Иконка для командировки (третья SVG – геолокация)
+// Иконка для командировки 
 const BusinessTripIcon = () => (
   <svg width="16" height="18" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M13.5 7.04545C13.5 12.1364 7 16.5 7 16.5C7 16.5 0.5 12.1364 0.5 7.04545C0.5 5.30949 1.18482 3.64463 2.40381 2.41712C3.62279 1.18961 5.27609 0.5 7 0.5C8.72391 0.5 10.3772 1.18961 11.5962 2.41712C12.8152 3.64463 13.5 5.30949 13.5 7.04545Z" stroke="#2B585C" strokeWidth="1.1" strokeOpacity="1" strokeLinecap="round" strokeLinejoin="round"/>
@@ -110,12 +110,11 @@ export function WorkExceptions({ employeeId }: WorkExceptionsProps) {
     return `${day}.${month}.${year.slice(-2)}`;
   };
 
-  // ... остальное (getIcon, getTypeLabel) без изменений
 
   return (
     <div className="components-data">
       <div className="title">Исключения</div>
-      <div className="pers-data-list">
+      <div className="pers-data-list-exceptions">
         {exceptions.map((exc) => (
           <div key={exc.id} className="excep-item">
             <div className="excep-item-title">{getIcon(exc.type)}</div>
