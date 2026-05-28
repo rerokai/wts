@@ -70,7 +70,7 @@ export function TeamHeatmap({ year, month, employees, schedules, exceptions, onC
       availableEmployees,
       unavailableEmployees,
     };
-  };
+  }; 
 
   const getCellColor = (percent: number): string => {
     if (percent >= 70) return '#D1FFD7';

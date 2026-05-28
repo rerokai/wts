@@ -169,8 +169,8 @@ export function RiskPage() {
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="name">По имени</SelectItem>
-                <SelectItem value="risk">По риску (выс-низ)</SelectItem>
-                <SelectItem value="load">По нагрузке (выс-низ)</SelectItem>
+                <SelectItem value="risk">По риску</SelectItem>
+                <SelectItem value="load">По нагрузке </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

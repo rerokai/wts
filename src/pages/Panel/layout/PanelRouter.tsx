@@ -8,7 +8,6 @@ export function PanelRouter(){
         <div className="panel-layout">
             <PanelSidebar/>
             <Outlet/>
-            
         </div> 
     )
 }

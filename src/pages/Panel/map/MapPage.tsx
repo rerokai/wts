@@ -1,4 +1,3 @@
-// src/pages/Panel/map/MapPage.tsx
 import { useState } from 'react';
 import { TeamHeatmap } from './TeamHeatmap';
 import { UsersInfoPanel } from './UsersInfoPanel';

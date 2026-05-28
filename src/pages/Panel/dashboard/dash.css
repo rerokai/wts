@@ -1,0 +1,243 @@
+.dashboard-page{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    margin: 0px;
+}
+
+.dashboard-components {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    width: 100%;    
+    height: 100%;
+    display: grid;
+    grid-column-gap: 14px;
+    grid-row-gap: 14px; 
+}
+
+.accuracy-details { 
+    grid-area: 1 / 1 / 2 / 3;
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%; 
+}
+
+.accuracy-dinamic { 
+    grid-area: 1 / 3 / 2 / 5;
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%; 
+}
+
+.integration { 
+    grid-area: 1 / 5 / 2 / 7;
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.stay-schedule { 
+    grid-area: 2 / 1 / 4 / 4;
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%; 
+}
+
+.accuracy-prioritet { 
+    grid-area: 2 / 4 / 4 / 7; 
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.last-events { 
+    grid-area: 4 / 1 / 6 / 5; 
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.workload-balance { 
+    grid-area: 4 / 5 / 6 / 7; 
+    background-color: var(--bg-components);
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.title-right{
+    padding: 10px 6px;
+    font-size: 17px;
+    text-align: center;
+    color: rgba(var(--greendark), 1)
+}
+
+.accuracy-chart{
+    padding-bottom: 20px;
+}
+
+.accuracy-chart-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+    
+}
+
+.accuracy-chart-wrapper {
+  flex: 1;
+  min-height: 0; 
+  width: 100%;
+  margin-left: -10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+}
+
+
+.integration-item{
+    margin: 6px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.integration-description{
+    display: flex;
+    flex-direction: column;
+    gap:4px;
+    opacity: 0.9;
+}
+
+.integration-item:hover{
+    background-color: var(--hover-grey);
+}
+
+.integration-name{
+    font-size: 18px;
+}
+
+.integration-data{
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.sh-row{
+    display: flex;
+    flex-direction: row;
+    padding: 4px 16px;
+    align-items: center ;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.title-event{
+    padding-top: 20px;
+    padding-bottom: 10px;
+    font-size: 17px;
+    text-align: center;
+    color: rgba(var(--greendark), 1)
+}
+
+.events-row{
+    display: flex;
+    flex-direction: row;
+    padding: 0px 16px;
+    align-items: center ;
+    border-radius: 6px;
+    cursor: pointer;
+    height: 48px;
+    gap:20px;
+    transition: background-color 0.2s ease;
+}
+
+.event-time{
+    opacity: 0.6;
+    font-size: 14px;
+}
+
+.event-title{
+    font-size: 15px;
+}
+
+.events-row:hover{
+    background-color: var(--hover-grey);
+}
+
+.sh-item{
+    display: flex;
+    flex-direction: column;
+    
+    width: 100%;
+    gap:2px;
+
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.sh-row:hover{
+    background-color: var(--hover-grey);
+}
+
+.sh-description{
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.components-dat{
+    padding: 0px 20px;
+}
+
+
+
+.components-dat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;        
+  background: white;
+  border-radius: 12px;
+  padding: 0px 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  overflow: hidden;      
+}
+
+.components-dat .data-table-wrapper {
+  height: 100%;
+}
+
+.components-dat table {
+  width: 100%;
+}
+
+.components-dat tbody tr {
+  height: 36px;
+}
+
+.components-dat td{
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+.components-dat th {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+  
+  font-weight: 400;
+}
+
+.components-dat th:nth-child(3) {
+  text-align: center;
+}

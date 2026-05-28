@@ -40,7 +40,7 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  overflow: hidden;       /* важно для скролла внутри */
+  overflow: hidden;  
 }
 
 [data-slot="select-trigger"] {
@@ -78,7 +78,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  min-width: max-content;      /* чтобы при сжатии не ломались заголовки */
+  min-width: max-content;      
 }
 
 /* Угловая ячейка "Дни / Часы" */

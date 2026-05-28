@@ -1,0 +1,49 @@
+.employee-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;          
+  overflow: hidden;       
+  width: 100%;
+  padding: 20px;
+  margin: 0;
+}
+
+.employee-filters {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  padding-bottom: 14px;
+  flex-shrink: 0;         
+}
+
+.employee-components {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 10px;
+  flex: 1;                
+  min-height: 0;          
+}
+
+.employees-area {
+  grid-area: 1 / 1 / 2 / 2;
+  background-color: var(--bg-components);
+  border-radius: 14px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+  overflow: auto;         /* если карта не помещается, скролл внутри */
+}
+
+.employee-info {
+  grid-area: 1 / 2 / 2 / 3;
+  background-color: var(--bg-components);
+  border-radius: 14px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;  
+}
+
+
+.hide-add-except .add-except {
+  display: none;
+}

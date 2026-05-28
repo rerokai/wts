@@ -90,7 +90,7 @@
     padding: 0px 10px;
     gap:18px;
 }
-
+ 
 .pers-data-list-exceptions{
     display: flex;
     flex-direction: column;
@@ -197,7 +197,6 @@
 
 /* CHART */
 
-/* График нагрузки – вписывается в блок .workload */
 .workload-chart-container {
   display: flex;
   flex-direction: column;

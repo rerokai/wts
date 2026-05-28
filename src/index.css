@@ -13,11 +13,20 @@
 
   --border: oklch(0.922 0 0);
   --border-o: rgba(202, 202, 202, 0.3);
+  --hover-grey: rgba(202, 202, 202, 0.2);
 
   --green: 107, 255, 149;
   --greendark: 43, 88, 92;
 
-  --text: rgba(68, 87, 89, 1)
+  --text: rgba(68, 87, 89, 1);
+
+  --light-green: #D1FFD7;
+  --light-yellow:#FFFACC;
+  --light-red:#FFCCCC;
+
+  --green-2: #A4FFC4;
+  --yellow: #FFED9C;
+  --red:#FFA1A1;
 ;
 
   --background: oklch(1 0 0);

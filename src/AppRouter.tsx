@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { PrivateRoute } from "./PrivateRoute";
+import { PanelRouter } from "./pages/Panel/layout/PanelRouter";
+import { Navigate } from "react-router-dom";
+
 import { ProfilePage } from "./pages/Panel/profile/ProfilePage";
 import { RiskPage } from "./pages/Panel/risk/RiskPage";
 import { MapPage } from "./pages/Panel/map/MapPage";
 import { IntroPage } from "./pages/Intro/IntroPage";
-import { PanelRouter } from "./pages/Panel/layout/PanelRouter";
+
 import { LoginPage } from "./pages/Intro/LoginPage";
 import { RegisterPage } from "./pages/Intro/RegisterPage";
 import { DashboardPage } from "./pages/Panel/dashboard/Dashboard";
@@ -14,6 +17,7 @@ import { EmployeePage } from "./pages/Panel/employee/EmployeePage";
 import { MeetingPage } from "./pages/Panel/meeting/MeetingPage";
 import { WorkloadPage } from "./pages/Panel/workload/WorkloadPage";
 import { IntegrationsPage } from "./pages/Panel/integrations/IntergationsPage";
+
 
 export function AppRouter() {
   return (
@@ -36,6 +40,7 @@ export function AppRouter() {
               </PrivateRoute>
             }
           >
+            <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage/>}/>
             <Route path="profile" element={<ProfilePage />} />
             <Route path="map" element={<MapPage />} />
