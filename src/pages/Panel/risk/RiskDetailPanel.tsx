@@ -1,4 +1,4 @@
-import { Employee } from "@/mocks/teamData";
+import type { Employee } from '@/api/data-contracts';   //
 import "./risk.css";
 
 interface Meeting {

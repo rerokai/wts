@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from "@/components/ui/select";
-import './profile.css';
 import { DatePickerDemo } from '@/components/ui/date-picker';
+import { api } from '@/lib/apiClient';
+import type { ScheduleException } from '@/api/data-contracts';
+import './profile.css';
 
 // Иконка для больничного 
 const SickIcon = () => (
@@ -34,32 +36,18 @@ const BusinessTripIcon = () => (
   </svg>
 );
 
-interface WorkExceptionsProps {
-  employeeId: number;
-  minHeight?: string | number;   //
-}
-
-interface ExceptionItem {
-  id: number;
-  type: string;
-  startDate: string;
-  endDate: string;
-}
-
-// Преобразование типа в читаемый текст
 const getTypeLabel = (type: string) => {
   switch (type) {
-    case 'sick': return 'Больничный';
+    case 'sick_leave': return 'Больничный';
     case 'vacation': return 'Отпуск';
     case 'business_trip': return 'Командировка';
     default: return type;
   }
 };
 
-// Выбор иконки в зависимости от типа
 const getIcon = (type: string) => {
   switch (type) {
-    case 'sick': return <SickIcon />;
+    case 'sick_leave': return <SickIcon />;
     case 'vacation': return <VacationIcon />;
     case 'business_trip': return <BusinessTripIcon />;
     default: return <BusinessTripIcon />;
@@ -72,21 +60,20 @@ const formatDate = (dateStr: string) => {
   return `${day}.${month}.${year.slice(-2)}`;
 };
 
-export function WorkExceptions({ employeeId, minHeight}: WorkExceptionsProps) {
-  const [exceptions, setExceptions] = useState<ExceptionItem[]>([
-    { id: 1, type: 'business_trip', startDate: '2026-04-13', endDate: '2026-04-18' },
-    { id: 2, type: 'vacation', startDate: '2026-04-13', endDate: '2026-04-18' },
-  ]);
+interface WorkExceptionsProps {
+  exceptions: ScheduleException[];
+  employeeId: number;
+  onExceptionAdded?: () => void;
+}
 
-  const listStyle = minHeight
-    ? { minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }
-    : {};
+export function WorkExceptions({ exceptions, employeeId, onExceptionAdded }: WorkExceptionsProps) {
+
 
   const [newType, setNewType] = useState('vacation');
   const [newStartDate, setNewStartDate] = useState<Date | undefined>(undefined);
   const [newEndDate, setNewEndDate] = useState<Date | undefined>(undefined);
 
-  const handleAddException = () => {
+  const handleAddException = async () => {
     if (!newStartDate || !newEndDate) {
       alert('Выберите даты');
       return;
@@ -95,40 +82,36 @@ export function WorkExceptions({ employeeId, minHeight}: WorkExceptionsProps) {
       alert('Дата начала не может быть позже даты конца');
       return;
     }
-    const newId = Date.now();
-    setExceptions([
-      ...exceptions,
-      {
-        id: newId,
-        type: newType,
-        startDate: newStartDate.toISOString().split('T')[0],
-        endDate: newEndDate.toISOString().split('T')[0],
-      },
-    ]);
-    setNewStartDate(undefined);
-    setNewEndDate(undefined);
+    try {
+      await api.createScheduleExceptionApiScheduleExceptionsPost({
+        type: newType as any,
+        description: '',
+        start_date: newStartDate.toISOString().split('T')[0],
+        end_date: newEndDate.toISOString().split('T')[0],
+        employee_id: employeeId,
+      });
+      setNewStartDate(undefined);
+      setNewEndDate(undefined);
+      if (onExceptionAdded) onExceptionAdded();
+    } catch (err) {
+      console.error('Ошибка добавления исключения', err);
+      alert('Не удалось добавить исключение');
+    }
   };
 
-  const formatDate = (dateStr: string) => {
-    const [year, month, day] = dateStr.split('-');
-    return `${day}.${month}.${year.slice(-2)}`;
-  };
-
-  
   return (
     <div className="components-data">
       <div className="title">Исключения</div>
-      <div className="pers-data-list-exceptions" style={listStyle}>
+      <div className="pers-data-list-exceptions" style={{ maxHeight: '130px', overflowY: 'auto' }}>
         {exceptions.map((exc) => (
           <div key={exc.id} className="excep-item">
             <div className="excep-item-title">{getIcon(exc.type)}</div>
             <div className="except-info">
-              {getTypeLabel(exc.type)} {formatDate(exc.startDate)} - {formatDate(exc.endDate)}
+              {getTypeLabel(exc.type)} {formatDate(exc.start_date)} - {formatDate(exc.end_date)}
             </div>
           </div>
         ))}
       </div>
-
       <div className="add-except">
         <div className="title-q">Добавить исключение</div>
         <div className="new-except-info">
@@ -140,7 +123,7 @@ export function WorkExceptions({ employeeId, minHeight}: WorkExceptionsProps) {
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="vacation">Отпуск</SelectItem>
-                <SelectItem value="sick">Больничный</SelectItem>
+                <SelectItem value="sick_leave">Больничный</SelectItem>
                 <SelectItem value="business_trip">Командировка</SelectItem>
               </SelectGroup>
             </SelectContent>

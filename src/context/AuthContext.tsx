@@ -1,7 +1,6 @@
-// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { api, setAuthToken } from '@/lib/apiClient';
-import type { User } from '../api/backendApi';
+import type { User, Tokens } from '@/api/data-contracts';
 
 interface AuthContextType {
   user: User | null;
@@ -28,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchCurrentUser = async () => {
     try {
-      const response = await api.api.getMyUserApiUsersMeGet();
+      const response = await api.getMyUserApiUsersMeGet();
       setUser(response.data);
     } catch (error) {
       console.error('Failed to fetch user', error);
@@ -38,20 +37,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-const login = async (email: string, password: string) => {
-  // Просто передаём объект, а не URLSearchParams
-  const response = await api.api.loginApiAuthLoginPost({
-    username: email,
-    password: password,
-  });
-  const tokens = response.data;
-  setAuthToken(tokens.access_token);
-  await fetchCurrentUser();
-};
+  const login = async (email: string, password: string) => {
+    const response = await api.loginApiAuthLoginPost({
+      username: email,
+      password: password,
+    });
+    const tokens = response.data as Tokens;
+    setAuthToken(tokens.access_token);
+    await fetchCurrentUser();
+  };
 
   const register = async (email: string, password: string) => {
-    await api.api.registerEmployeeApiUsersRegisterPost({ email, password });
-    // после регистрации автоматически логиним
+    await api.registerEmployeeApiUsersRegisterPost({ email, password });
     await login(email, password);
   };
 

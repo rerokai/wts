@@ -18,7 +18,7 @@ interface DatePickerDemoProps {
 export function DatePickerDemo({ date: externalDate, setDate: externalSetDate }: DatePickerDemoProps) {
   const [internalDate, setInternalDate] = React.useState<Date | undefined>(undefined);
   
-  // Если переданы пропсы – используем их, иначе внутреннее состояние
+  
   const date = externalDate !== undefined ? externalDate : internalDate;
   const setDate = externalSetDate || setInternalDate;
 

@@ -1,5 +1,9 @@
-import { Employee, User, Team } from '@/api/backendApi';
+
+import type { Employee, User, Team } from '@/api/data-contracts';
 import './profile.css';
+
+
+type EmployeeWithPosition = Employee & { position?: string };
 
 interface PersonalDataProps {
   employee: Employee;
@@ -8,10 +12,11 @@ interface PersonalDataProps {
 }
 
 export function PersonalData({ employee, user, team }: PersonalDataProps) {
-  const fullName = `${employee.last_name} ${employee.first_name}`;
-  
-  const position = 'Главный Менеджер';
-  const patronymic = '';
+
+  const emp = employee as EmployeeWithPosition;
+  const fullName = `${emp.last_name} ${emp.first_name}`;
+  const position = emp.position || '—';
+  const patronymic = ''; 
 
   return (
     <div className="components-data">
