@@ -47,3 +47,47 @@
 .hide-add-except .add-except {
   display: none;
 }
+
+.employees-area table tbody tr {
+  height: 36px;
+}
+
+.employees-area table tbody td {
+  padding: 0px 10px;
+  
+}
+
+.employees-area th{
+  padding: 0px, 10px !important;
+  text-align: center !important;
+}
+
+.employe-title{
+  display: flex;
+  flex-direction: row;
+  align-items:center ;
+  justify-content: space-between;
+  padding: 0px 20px;
+}
+
+.employee-butt{
+  padding: 0px 20px ;
+}
+
+.detail-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  padding: 0px 20px;
+  gap: 80px;
+  margin-top: 10px;
+}
+
+.label{
+  width: 120px;
+}
+
+.pers-data-list-exceptions {
+  max-height: 62px;   /* нужное значение */
+  overflow-y: auto;
+}

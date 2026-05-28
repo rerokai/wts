@@ -70,7 +70,7 @@ export default function PanelSidebar() {
             </div>
           </button>
         </NavLink>
-        <NavLink  className="panel-nav" to="calendar" end>
+        {/* <NavLink  className="panel-nav" to="calendar" end>
           <button className="panel-nav-button">
             <div>
               <svg width="18" height="18" viewBox="0 0 33 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -84,7 +84,7 @@ export default function PanelSidebar() {
               Календарь задач
             </div>
           </button>
-        </NavLink>
+        </NavLink> */}
         <NavLink className="panel-nav" to="risk" end>
           <button className="panel-nav-button">
             <div>
@@ -128,7 +128,7 @@ export default function PanelSidebar() {
             </div>
           </button>
         </NavLink>
-        <NavLink className="panel-nav" to="workload" end>
+        {/* <NavLink className="panel-nav" to="workload" end>
           <button className="panel-nav-button">
             <div>
               <svg width="18" height="20" viewBox="0 0 37 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -140,11 +140,11 @@ export default function PanelSidebar() {
               Анализ нагруженности
             </div>
           </button>
-        </NavLink>
+        </NavLink> */}
       </nav>
       <nav className="panel-sidebar_nav">
         
-        <NavLink className="panel-nav" to="integrations" end>
+        {/* <NavLink className="panel-nav" to="integrations" end>
           <button className="panel-nav-button">
             <div>
               <svg width="18" height="18" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -156,7 +156,7 @@ export default function PanelSidebar() {
               Настройки интеграций
             </div>
           </button>
-        </NavLink>
+        </NavLink> */}
       </nav>
       </div>
     </aside>

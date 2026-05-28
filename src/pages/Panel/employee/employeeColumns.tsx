@@ -17,7 +17,7 @@ export const employeeColumns: ColumnDef<EmployeeRowData>[] = [
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
         Сотрудник
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <ArrowUpDown className="ml-2 h-2 w-4" />
       </Button>
     ),
   },
