@@ -88,6 +88,6 @@
 }
 
 .pers-data-list-exceptions {
-  max-height: 62px;   /* нужное значение */
+  max-height: 62px;
   overflow-y: auto;
 }

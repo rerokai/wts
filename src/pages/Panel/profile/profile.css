@@ -91,14 +91,13 @@
     gap:18px;
 }
  
-.pers-data-list-exceptions{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 0px 10px;
-    gap:18px;
-    overflow-y: auto;
-    height: 160px;
+.pers-data-list-exceptions {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0px 10px;
+  gap: 18px;
+  overflow-y: auto;
 }
 
 .pers-data-item{

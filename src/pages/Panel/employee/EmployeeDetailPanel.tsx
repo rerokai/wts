@@ -14,6 +14,7 @@ import { getEmployeeDetails, EmployeePersonal } from "./employeeDetails";
 import { riskData as defaultRiskData } from "../risk/riskData";
 import { WorkExceptions } from "../profile/WorkExceptions";
 import "./employee.css";
+import "../profile/profile.css"
 
 interface EmployeeDetailPanelProps {
   employee: typeof mockEmployees[0] | null;
@@ -217,7 +218,7 @@ export function EmployeeDetailPanel({
       <div className="detail-row"><span className="label">Дни:</span><span>{details?.schedule.days}</span></div>
       <div className="detail-row"><span className="label">Часы:</span><span>{details?.schedule.hours}</span></div>
       <div className="hide-add-except">
-        <WorkExceptions employeeId={employee!.id} />
+        <WorkExceptions employeeId={employee!.id} minHeight="62px" />
       </div>
     </div>
   );

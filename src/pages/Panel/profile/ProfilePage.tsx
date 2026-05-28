@@ -52,7 +52,7 @@ export function ProfilePage() {
           <WorkShedule employeeId={employee.id} />
         </div>
         <div className="work-exceptions">
-          <WorkExceptions employeeId={employee.id} />
+          <WorkExceptions employeeId={employee.id} minHeight="130px"/>
         </div>
         <div className="risk-conflicts">
           <RiskDetailPanel employee={employee} details={employeeDetails} />

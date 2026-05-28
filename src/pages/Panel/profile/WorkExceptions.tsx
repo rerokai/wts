@@ -36,6 +36,7 @@ const BusinessTripIcon = () => (
 
 interface WorkExceptionsProps {
   employeeId: number;
+  minHeight?: string | number;   //
 }
 
 interface ExceptionItem {
@@ -65,18 +66,21 @@ const getIcon = (type: string) => {
   }
 };
 
-// Форматирование даты из YYYY-MM-DD в DD.MM.YY
 const formatDate = (dateStr: string) => {
   if (!dateStr) return '';
   const [year, month, day] = dateStr.split('-');
   return `${day}.${month}.${year.slice(-2)}`;
 };
 
-export function WorkExceptions({ employeeId }: WorkExceptionsProps) {
+export function WorkExceptions({ employeeId, minHeight}: WorkExceptionsProps) {
   const [exceptions, setExceptions] = useState<ExceptionItem[]>([
     { id: 1, type: 'business_trip', startDate: '2026-04-13', endDate: '2026-04-18' },
     { id: 2, type: 'vacation', startDate: '2026-04-13', endDate: '2026-04-18' },
   ]);
+
+  const listStyle = minHeight
+    ? { minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }
+    : {};
 
   const [newType, setNewType] = useState('vacation');
   const [newStartDate, setNewStartDate] = useState<Date | undefined>(undefined);
@@ -110,11 +114,11 @@ export function WorkExceptions({ employeeId }: WorkExceptionsProps) {
     return `${day}.${month}.${year.slice(-2)}`;
   };
 
-
+  
   return (
     <div className="components-data">
       <div className="title">Исключения</div>
-      <div className="pers-data-list-exceptions">
+      <div className="pers-data-list-exceptions" style={listStyle}>
         {exceptions.map((exc) => (
           <div key={exc.id} className="excep-item">
             <div className="excep-item-title">{getIcon(exc.type)}</div>
