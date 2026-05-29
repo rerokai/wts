@@ -1,4 +1,4 @@
-// src/pages/Panel/meeting/MeetingPage.tsx
+
 import { useState, useMemo } from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { format } from "date-fns";
@@ -16,7 +16,7 @@ import "./meeting.css";
 
 const cn = (...classes: (string | undefined | false)[]) => classes.filter(Boolean).join(" ");
 
-// Компонент выбора диапазона дат (как ранее)
+
 function DatePickerWithRange({ buttonClassName, value, onChange }: { buttonClassName?: string; value?: DateRange; onChange?: (range: DateRange | undefined) => void }) {
   const [date, setDate] = useState<DateRange | undefined>(value);
   const handleSelect = (newDate: DateRange | undefined) => {

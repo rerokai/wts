@@ -1,4 +1,4 @@
-// src/pages/Panel/risk/RiskPage.tsx
+
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { columns, RiskRowData } from "./riskTableColumns";
@@ -46,11 +46,11 @@ export function RiskPage() {
     loadData();
   }, [loadData]);
 
-  // Расчёт данных для таблицы (сортировка, фильтрация)
+ 
   const tableData = useMemo((): RiskRowData[] => {
     if (profiles.length === 0) return [];
 
-    // Преобразуем профили в строки с рассчитанными метриками
+   
     let rows: RiskRowData[] = profiles.map(profile => {
       const metrics = calculateRiskMetrics(profile, 
         selectedPeriod === "7" ? "week" : selectedPeriod === "30" ? "month" : "quarter"
@@ -67,7 +67,7 @@ export function RiskPage() {
       };
     });
 
-    // Фильтр по отделу
+   
     if (selectedDepartment !== "all") {
       rows = rows.filter(row => {
         const profile = profiles.find(p => p.employee?.id === row.id);

@@ -1,4 +1,4 @@
-// src/pages/Panel/dashboard/DashboardPage.tsx
+
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/apiClient';
 import type { Profile, Event } from '@/api/data-contracts';

@@ -1,4 +1,3 @@
-// src/pages/Panel/map/TeamHeatmap.tsx
 import { useState, useMemo } from 'react';
 import { format, eachDayOfInterval, startOfMonth, endOfMonth, parseISO, isWithinInterval } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -27,21 +26,21 @@ export function TeamHeatmap({ year, month, profiles, onCellClick }: TeamHeatmapP
     const schedule = profile.schedule;
     if (!schedule) return { available: false, reason: 'Нет графика' };
 
-    // Определяем день недели (1-7, где 1=пн, 7=вс)
+    
     let jsDay = date.getDay(); // 0 вс, 1 пн, ..., 6 сб
     const day1Based = jsDay === 0 ? 7 : jsDay;
     if (!schedule.work_days.includes(day1Based)) {
       return { available: false, reason: 'Выходной день' };
     }
 
-    // Извлекаем часы из start_at и end_at (формат "HH:MM:SS")
+    //  (формат "HH:MM:SS")
     const startHour = parseInt(schedule.start_at.split(':')[0], 10);
     const endHour = parseInt(schedule.end_at.split(':')[0], 10);
     if (hour < startHour || hour >= endHour) {
       return { available: false, reason: 'Нерабочее время' };
     }
 
-    // Проверяем исключения
+    
     const exception = profile.schedule_exceptions?.find(e => {
       const excStart = parseISO(e.start_date);
       const excEnd = parseISO(e.end_date);

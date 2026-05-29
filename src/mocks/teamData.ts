@@ -1,7 +1,3 @@
-// src/mocks/teamData.ts
-
-// src/mocks/teamData.ts
-
 export interface Employee {
   id: number;
   first_name: string;
@@ -29,7 +25,6 @@ export interface MockException {
   end_date: string;
 }
 
-// ... остальные моки (mockEmployees, mockSchedules, mockExceptions) с типом Employee[]
 
 // Сотрудники (расширенный массив)
 export const mockEmployees: Employee[] = [

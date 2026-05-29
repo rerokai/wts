@@ -102,7 +102,7 @@ export function EmployeePage() {
       });
       const employeeId = empRes.data.id;
       await api.createScheduleApiSchedulesPost({
-        work_days: newData.schedule.work_days.map((d: number) => d + 1), // 0→1
+        work_days: newData.schedule.work_days.map((d: number) => d + 1), 
         time_zone: newData.schedule.time_zone,
         work_format: newData.schedule.work_format,
         start_at: newData.schedule.start_at,

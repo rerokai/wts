@@ -1,4 +1,4 @@
-// src/pages/Panel/meeting/MeetingSuggestionPanel.tsx
+
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Users, XCircle } from "lucide-react";
 import "./meeting.css";

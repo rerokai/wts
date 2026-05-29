@@ -1,4 +1,3 @@
-// src/pages/Panel/map/MapPage.tsx
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { api } from '@/lib/apiClient';

@@ -1,4 +1,3 @@
-// src/mocks/employeeDetails.ts
 
 export interface EmployeePersonal {
   id: number;
@@ -20,7 +19,7 @@ export interface EmployeePersonal {
   }[];
 }
 
-// Данные для всех 20 сотрудников (id 1..20)
+
 export const employeeDetails: Record<number, EmployeePersonal> = {
   1: {
     id: 1,

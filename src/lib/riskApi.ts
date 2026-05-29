@@ -1,7 +1,6 @@
 
 import { api } from "@/lib/apiClient";
 
-// Типы для ответов (можно скопировать из бэкенда или описать самим)
 export interface EmployeeRiskMetrics {
   employee_id: number;
   full_name: string;
@@ -29,7 +28,7 @@ export interface TeamRiskSummary {
   high_risk_count: number;
 }
 
-// Расширяем API-клиент
+
 export const riskApi = {
   getRiskTable: async (params: {
     period_days?: number;

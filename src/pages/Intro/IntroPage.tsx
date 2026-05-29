@@ -1,4 +1,3 @@
-// src/pages/Intro/IntroPage.tsx
 import { Outlet } from "react-router-dom";
 import Grainient from "@/components/Grainient";// путь к вашему компоненту
 

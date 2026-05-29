@@ -1,4 +1,4 @@
-// src/pages/Panel/employee/EmployeeDetailPanel.tsx
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,7 +55,7 @@ export function EmployeeDetailPanel({
   onSaveNew,
   onCancelCreate,
 }: EmployeeDetailPanelProps) {
-  // Синхронное начальное состояние
+  
   const [isEditing, setIsEditing] = useState(isCreating);
   const [editedEmployee, setEditedEmployee] = useState<EditedEmployee | null>(() => {
     if (isCreating) {
@@ -70,7 +70,7 @@ export function EmployeeDetailPanel({
       return {
         firstName: employee.first_name,
         lastName: employee.last_name,
-        email: "", // email не хранится в Employee, при редактировании не меняем
+        email: "", 
         teamId: employee.team_id !== null ? employee.team_id : (teams[0]?.id ?? null),
       };
     }
@@ -98,7 +98,7 @@ export function EmployeeDetailPanel({
     return null;
   });
 
-  // Дополнительное обновление при изменении пропсов (только для не-создания)
+ 
   useEffect(() => {
     if (!isCreating) {
       if (employee) {
@@ -138,7 +138,7 @@ export function EmployeeDetailPanel({
 
   const handleSave = () => {
     if (isCreating && onSaveNew && editedEmployee && editedSchedule) {
-      // Проверка email
+     
       const email = editedEmployee.email.trim();
       if (!email.includes('@')) {
         alert("Введите корректный email (должен содержать @)");
@@ -197,7 +197,7 @@ export function EmployeeDetailPanel({
     return team?.name || "—";
   };
 
-  // Режим редактирования/создания
+ 
   if (isEditing && editedEmployee && (isCreating || editedSchedule)) {
     return (
       <div className="employee-detail-panel">
@@ -264,7 +264,7 @@ export function EmployeeDetailPanel({
     );
   }
 
-  // Режим просмотра
+
   const displaySchedule = initialSchedule;
   const displayExceptions = initialExceptions;
   const teamName = getTeamNameById(employee?.team_id ?? null);

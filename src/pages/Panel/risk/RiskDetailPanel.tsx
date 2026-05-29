@@ -1,4 +1,4 @@
-// src/pages/Panel/risk/RiskDetailPanel.tsx
+
 import type { Profile } from '@/api/data-contracts';
 import { calculateRiskMetrics } from './riskCalculator';
 import "./risk.css";

@@ -1,4 +1,3 @@
-// src/pages/Panel/map/UsersInfoPanel.tsx
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import type { Profile } from '@/api/data-contracts';

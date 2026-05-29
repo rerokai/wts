@@ -1,4 +1,4 @@
-// src/pages/Panel/dashboard/AccuracyPrioritet.tsx
+
 import { DataTable } from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import type { Profile } from '@/api/data-contracts';
@@ -28,12 +28,12 @@ interface AccuracyPrioritetProps {
 
 export function AccuracyPrioritet({ profiles }: AccuracyPrioritetProps) {
   const topRiskData = profiles
-    .filter(({ metrics }) => metrics.actuality.days > 0)  // ← исправлено
+    .filter(({ metrics }) => metrics.actuality.days > 0)  
     .map(({ profile, metrics }) => ({
       id: profile.employee!.id,
       fullName: `${profile.employee!.last_name} ${profile.employee!.first_name}`,
       reason: metrics.recommendations.split('.')[0] || "Требуется внимание",
-      daysWithoutUpdate: metrics.actuality.days,        // ← исправлено
+      daysWithoutUpdate: metrics.actuality.days,        
       integralRisk: metrics.integralRisk,
     }))
     .sort((a, b) => b.integralRisk - a.integralRisk)

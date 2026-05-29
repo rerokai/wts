@@ -1,4 +1,3 @@
-// src/pages/Panel/profile/Accuracy.tsx
 import { api } from "@/lib/apiClient";
 import { useState } from "react";
 
@@ -16,7 +15,7 @@ export function Accuracy({ scheduleId, onConfirm }: AccuracyProps) {
     try {
       const current = await api.getScheduleByIdApiSchedulesIdGet(scheduleId);
       const schedule = current.data;
-      // Отправляем дни как есть (они уже в формате 1..7)
+      
       const updatePayload = {
         work_days: schedule.work_days,
         time_zone: schedule.time_zone,

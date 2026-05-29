@@ -1,6 +1,4 @@
-// src/pages/Panel/risk/riskData.ts
 
-// Типы для удобства
 export interface Actuality {
   status: string;
   days: number;
@@ -22,7 +20,6 @@ export interface EmployeeRiskDetails {
   integralRisk: number;
 }
 
-// Генерируем данные для 20 сотрудников (id от 1 до 20)
 export const riskData: Record<number, EmployeeRiskDetails> = {
   
 };

@@ -1,4 +1,4 @@
-// src/pages/Panel/profile/Workload.tsx
+
 import { useMemo } from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { Schedule, Event } from '@/api/data-contracts';
@@ -12,7 +12,7 @@ export function Workload({ schedule, events }: WorkloadProps) {
   const chartData = useMemo(() => {
     if (!schedule) return [];
 
-    const days = 10; // количество дней для отображения
+    const days = 10;
     const today = new Date();
     const result = [];
 
@@ -21,7 +21,7 @@ export function Workload({ schedule, events }: WorkloadProps) {
       date.setDate(today.getDate() - i);
       const dateStr = date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
 
-      // Преобразуем день недели в 1-пн...7-вс (как в schedule.work_days)
+     
       let jsDay = date.getDay(); // 0 вс, 1 пн, ..., 6 сб
       const day1Based = jsDay === 0 ? 7 : jsDay;
       const isWorkDay = schedule.work_days.includes(day1Based);
