@@ -1,9 +1,8 @@
 // src/pages/Panel/dashboard/AccuracyPrioritet.tsx
-import { useMemo } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { mockEmployees } from "@/mocks/teamData";
-import { riskData, type EmployeeRiskDetails } from "../risk/riskData";
+import type { Profile } from '@/api/data-contracts';
+import type { RiskMetrics } from '../risk/riskCalculator';
 
 interface TopRiskRow {
   id: number;
@@ -14,54 +13,37 @@ interface TopRiskRow {
 }
 
 const columns: ColumnDef<TopRiskRow>[] = [
-  {
-    accessorKey: "fullName",
-    header: "Сотрудник",
-  },
-  {
-    accessorKey: "reason",
-    header: "Причина",
-  },
+  { accessorKey: "fullName", header: "Сотрудник" },
+  { accessorKey: "reason", header: "Причина" },
   {
     accessorKey: "daysWithoutUpdate",
     header: "Дней без обновления",
-    cell: ({ row }) => {
-      const days = row.original.daysWithoutUpdate;
-      return <div className="text-center font-medium">{days}</div>;
-    },
+    cell: ({ row }) => <div className="text-center font-medium">{row.original.daysWithoutUpdate}</div>,
   },
 ];
 
-export function AccuracyPrioritet() {
-  const topRiskData = useMemo((): TopRiskRow[] => {
-    return mockEmployees
-      .filter((emp) => riskData[emp.id])
-      .map((emp) => {
-        const details = riskData[emp.id];
-        const reason =
-          details.conflicts?.length > 0
-            ? details.conflicts[0]
-            : "Нет явных конфликтов";
-        return {
-          id: emp.id,
-          fullName: `${emp.last_name} ${emp.first_name}`,
-          reason,
-          daysWithoutUpdate: details.actuality?.days ?? 0,
-          integralRisk: details.integralRisk ?? 0,
-        };
-      })
-      .filter((emp) => emp.daysWithoutUpdate > 0)
-      .sort((a, b) => b.integralRisk - a.integralRisk)
-      .slice(0, 4);
-  }, []);
+interface AccuracyPrioritetProps {
+  profiles: { profile: Profile; metrics: RiskMetrics }[];
+}
+
+export function AccuracyPrioritet({ profiles }: AccuracyPrioritetProps) {
+  const topRiskData = profiles
+    .filter(({ metrics }) => metrics.actuality.days > 0)  // ← исправлено
+    .map(({ profile, metrics }) => ({
+      id: profile.employee!.id,
+      fullName: `${profile.employee!.last_name} ${profile.employee!.first_name}`,
+      reason: metrics.recommendations.split('.')[0] || "Требуется внимание",
+      daysWithoutUpdate: metrics.actuality.days,        // ← исправлено
+      integralRisk: metrics.integralRisk,
+    }))
+    .sort((a, b) => b.integralRisk - a.integralRisk)
+    .slice(0, 4);
 
   if (topRiskData.length === 0) {
     return (
       <div className="components-dat">
         <div className="title">Приоритет актуализации</div>
-        <div className="text-muted-foreground p-4 text-center">
-          Нет данных о сотрудниках
-        </div>
+        <div className="text-muted-foreground p-4 text-center">Нет данных о сотрудниках</div>
       </div>
     );
   }
