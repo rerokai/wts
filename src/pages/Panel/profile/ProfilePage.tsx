@@ -5,108 +5,59 @@ import { api } from '@/lib/apiClient';
 import { PersonalData } from './PersonalData';
 import { WorkSchedule } from './WorkSchedule';
 import { WorkExceptions } from './WorkExceptions';
-import type { Employee, Team, Schedule, ScheduleException, Event as ApiEvent } from '@/api/data-contracts';
+import type { Profile } from '@/api/data-contracts';
 import './profile.css';
 import { Workload } from './Workload';
 import { RiskDetailPanel } from '../risk/RiskDetailPanel';
-import { riskData } from '../risk/riskData';
 
 export function ProfilePage() {
   const { user } = useAuth();
-  const [employee, setEmployee] = useState<Employee | null>(null);
-  const [team, setTeam] = useState<Team | null>(null);
-  const [schedule, setSchedule] = useState<Schedule | null>(null);
-  const [exceptions, setExceptions] = useState<ScheduleException[]>([]);
-  const [events, setEvents] = useState<ApiEvent[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadExceptions = useCallback(async () => {
-    if (!employee) return;
+  const loadProfile = useCallback(async () => {
     try {
-      const res = await api.getAllScheduleExceptionsApiScheduleExceptionsGet();
-      const allExceptions = Array.isArray(res.data) ? res.data : [];
-      const myExceptions = allExceptions.filter(exc => exc.employee_id === employee.id);
-      setExceptions(myExceptions);
+      const res = await api.getMyProfileApiProfilesMeGet();
+      setProfile(res.data);
     } catch (err) {
-      console.error('Ошибка загрузки исключений', err);
-    }
-  }, [employee]);
-
-  const loadEvents = useCallback(async () => {
-    try {
-      const res = await api.getMyEventsApiEventsMeGet();
-      setEvents(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
-      console.warn('Ошибка загрузки событий', err);
+      console.error('Ошибка загрузки профиля', err);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  const refreshSchedule = useCallback(async () => {
-    try {
-      const schedRes = await api.getMyScheduleApiSchedulesMeGet();
-      setSchedule(schedRes.data);
-    } catch (err) {
-      console.warn('Ошибка обновления графика', err);
-    }
-  }, []);
+  const refreshProfile = useCallback(async () => {
+    await loadProfile();
+  }, [loadProfile]);
 
   useEffect(() => {
-    if (!user) return;
-    const fetchData = async () => {
-      try {
-        const empRes = await api.getMyEmployeeApiEmployeesMeGet();
-        setEmployee(empRes.data);
-        if (empRes.data.team_id) {
-          const teamRes = await api.getTeamByIdApiTeamsIdGet(empRes.data.team_id);
-          setTeam(teamRes.data);
-        }
-        try {
-          const schedRes = await api.getMyScheduleApiSchedulesMeGet();
-          setSchedule(schedRes.data);
-        } catch {
-          setSchedule(null);
-        }
-      } catch (err) {
-        console.error('Ошибка загрузки профиля', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [user]);
-
-  useEffect(() => {
-    if (employee) {
-      loadExceptions();
-      loadEvents();
-    }
-  }, [employee, loadExceptions, loadEvents]);
+    loadProfile();
+  }, [loadProfile]);
 
   if (loading) return <div>Загрузка...</div>;
-  if (!employee) return <div>Нет данных сотрудника</div>;
+  if (!profile || !profile.employee) return <div>Нет данных сотрудника</div>;
 
-  const employeeDetails = riskData[employee.id] || null;
   return (
     <div className="profile-page">
       <div className="profile-components">
         <div className="personal-details">
-          <PersonalData employee={employee} user={user!} team={team} />
+          <PersonalData employee={profile.employee} user={profile.user} team={profile.team} />
         </div>
         <div className="work-schedule">
-          <WorkSchedule schedule={schedule} onRefresh={refreshSchedule} />
+          <WorkSchedule schedule={profile.schedule} onRefresh={refreshProfile} />
         </div>
         <div className="work-exceptions">
           <WorkExceptions
-            exceptions={exceptions}
-            employeeId={employee.id}
-            onExceptionAdded={loadExceptions}
+            exceptions={profile.schedule_exceptions || []}
+            employeeId={profile.employee.id}
+            onExceptionAdded={refreshProfile}
           />
         </div>
         <div className="risk-conflicts">
-          <RiskDetailPanel employee={employee} details={employeeDetails} />
+          <RiskDetailPanel profile={profile} period="month" />
         </div>
         <div className="workload">
-          <Workload schedule={schedule} events={events} />
+          <Workload schedule={profile.schedule} events={profile.events || []} />
         </div>
       </div>
     </div>

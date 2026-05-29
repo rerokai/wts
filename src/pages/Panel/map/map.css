@@ -172,11 +172,8 @@
   text-shadow: none;
   background: rgba(255, 255, 255, 0.7);
 }
-/* ... ваши другие стили ... */
 
 
-
-/* Правая панель — простые списки */
 .users-info-panel {
   background: white;
   border-radius: 12px;
@@ -234,7 +231,9 @@
 }
 
 .unavailable-item {
-  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 0px;
   border-bottom: 1px solid #f0f2f5;
   padding-bottom: 10px;
 }

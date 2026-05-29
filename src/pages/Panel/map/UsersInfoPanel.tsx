@@ -1,24 +1,22 @@
+// src/pages/Panel/map/UsersInfoPanel.tsx
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Employee } from '@/mocks/teamData';
+import type { Profile } from '@/api/data-contracts';
 import './map.css';
-
-import { openGoogleCalendar } from '@/googleCalendar';
-
 
 interface UsersInfoPanelProps {
   selectedDate: Date | null;
   selectedHour: number | null;
-  availableEmployees: Employee[];
-  unavailableEmployees: Array<{ employee: Employee; reason: string }>;
+  availableProfiles: Profile[];
+  unavailableProfiles: Array<{ profile: Profile; reason: string }>;
   onScheduleMeeting: () => void;
 }
 
 export function UsersInfoPanel({
   selectedDate,
   selectedHour,
-  availableEmployees,
-  unavailableEmployees,
+  availableProfiles,
+  unavailableProfiles,
   onScheduleMeeting,
 }: UsersInfoPanelProps) {
   if (!selectedDate || selectedHour === null) {
@@ -33,30 +31,29 @@ export function UsersInfoPanel({
   }
 
   const formattedDate = format(selectedDate, 'd MMMM, yyyy', { locale: ru });
-  const total = availableEmployees.length + unavailableEmployees.length;
-  const percent = total > 0 ? (availableEmployees.length / total) * 100 : 0;
+  const total = availableProfiles.length + unavailableProfiles.length;
+  const percent = total > 0 ? (availableProfiles.length / total) * 100 : 0;
 
   return (
     <div className="users-info-panel">
       <div className="panel-header">
         <h3>{formattedDate}, {selectedHour}:00</h3>
         <div className="availability-stats">
-          Доступно: {availableEmployees.length} / {total} ({Math.round(percent)}%)
+          Доступно: {availableProfiles.length} / {total} ({Math.round(percent)}%)
         </div>
       </div>
 
       <div className="panel-scrollable-content">
-        {/* Не доступны */}
         <div className="users-section">
           <div className="section-title">Не доступны</div>
           <div className="unavailable-list">
-            {unavailableEmployees.length === 0 ? (
+            {unavailableProfiles.length === 0 ? (
               <div className="empty-message">Нет недоступных сотрудников</div>
             ) : (
-              unavailableEmployees.map((item, idx) => (
+              unavailableProfiles.map((item, idx) => (
                 <div key={idx} className="unavailable-item">
                   <div className="user-name">
-                    {item.employee.last_name} {item.employee.first_name}
+                    {item.profile.employee?.last_name} {item.profile.employee?.first_name}
                   </div>
                   <div className="user-reason">{item.reason}</div>
                 </div>
@@ -65,16 +62,15 @@ export function UsersInfoPanel({
           </div>
         </div>
 
-        
         <div className="users-section">
           <div className="section-title">Доступны</div>
           <div className="available-list">
-            {availableEmployees.length === 0 ? (
+            {availableProfiles.length === 0 ? (
               <div className="empty-message">Нет доступных сотрудников</div>
             ) : (
-              availableEmployees.map((emp, idx) => (
+              availableProfiles.map((prof, idx) => (
                 <div key={idx} className="available-item">
-                  {emp.last_name} {emp.first_name}
+                  {prof.employee?.last_name} {prof.employee?.first_name}
                 </div>
               ))
             )}
@@ -82,7 +78,6 @@ export function UsersInfoPanel({
         </div>
       </div>
 
-      
       <button className="schedule-meeting-btn-small" onClick={onScheduleMeeting}>
         Назначить встречу
       </button>

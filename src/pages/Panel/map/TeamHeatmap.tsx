@@ -1,48 +1,52 @@
-// src/components/Map/TeamHeatmap.tsx
+// src/pages/Panel/map/TeamHeatmap.tsx
 import { useState, useMemo } from 'react';
-import { format, eachDayOfInterval, startOfMonth, endOfMonth, parseISO } from 'date-fns';
+import { format, eachDayOfInterval, startOfMonth, endOfMonth, parseISO, isWithinInterval } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import type { MockSchedule, MockException } from '@/mocks/teamData';
-import { Employee } from '@/mocks/teamData';
+import type { Profile } from '@/api/data-contracts';
+import './map.css';
 
 interface TeamHeatmapProps {
   year: number;
   month: number;
-  employees: Employee[];
-  schedules: MockSchedule[];
-  exceptions: MockException[];
-  onCellClick: (date: Date, hour: number, availableEmployees: Employee[], unavailableEmployees: Array<{ employee: Employee; reason: string }>) => void;
+  profiles: Profile[];
+  onCellClick: (date: Date, hour: number, availableProfiles: Profile[], unavailableProfiles: Array<{ profile: Profile; reason: string }>) => void;
 }
 
-export function TeamHeatmap({ year, month, employees, schedules, exceptions, onCellClick }: TeamHeatmapProps) {
+export function TeamHeatmap({ year, month, profiles, onCellClick }: TeamHeatmapProps) {
   const [selectedCellKey, setSelectedCellKey] = useState<string | null>(null);
 
   const daysInMonth = useMemo(() => {
-    const start = startOfMonth(new Date(year, month));
-    const end = endOfMonth(new Date(year, month));
+    const start = startOfMonth(new Date(year, month - 1)); // month в Date 0-11
+    const end = endOfMonth(new Date(year, month - 1));
     return eachDayOfInterval({ start, end });
   }, [year, month]);
 
-  const hours = useMemo(() => Array.from({ length: 14 }, (_, i) => i + 8), []);
+  const hours = useMemo(() => Array.from({ length: 14 }, (_, i) => i + 8), []); // 8:00 – 21:00
 
-  const isEmployeeAvailable = (employee: Employee, date: Date, hour: number): { available: boolean; reason: string } => {
-    const schedule = schedules.find(s => s.employee_id === employee.id);
-    if (!schedule) return { available: false, reason: 'Нет расписания' };
+  const isProfileAvailable = (profile: Profile, date: Date, hour: number): { available: boolean; reason: string } => {
+    const schedule = profile.schedule;
+    if (!schedule) return { available: false, reason: 'Нет графика' };
 
-    const dayOfWeek = date.getDay(); // 0=ВС, 1=ПН
-    const adjustedDay = dayOfWeek === 0 ? 7 : dayOfWeek;
-    if (!schedule.work_days.includes(adjustedDay)) {
+    // Определяем день недели (1-7, где 1=пн, 7=вс)
+    let jsDay = date.getDay(); // 0 вс, 1 пн, ..., 6 сб
+    const day1Based = jsDay === 0 ? 7 : jsDay;
+    if (!schedule.work_days.includes(day1Based)) {
       return { available: false, reason: 'Выходной день' };
     }
-    if (hour < schedule.start_hour || hour >= schedule.end_hour) {
+
+    // Извлекаем часы из start_at и end_at (формат "HH:MM:SS")
+    const startHour = parseInt(schedule.start_at.split(':')[0], 10);
+    const endHour = parseInt(schedule.end_at.split(':')[0], 10);
+    if (hour < startHour || hour >= endHour) {
       return { available: false, reason: 'Нерабочее время' };
     }
 
-    const exception = exceptions.find(e => 
-      e.employee_id === employee.id &&
-      date >= parseISO(e.start_date) &&
-      date <= parseISO(e.end_date)
-    );
+    // Проверяем исключения
+    const exception = profile.schedule_exceptions?.find(e => {
+      const excStart = parseISO(e.start_date);
+      const excEnd = parseISO(e.end_date);
+      return isWithinInterval(date, { start: excStart, end: excEnd });
+    });
     if (exception) {
       const reasonMap: Record<string, string> = {
         vacation: 'Отпуск',
@@ -57,20 +61,20 @@ export function TeamHeatmap({ year, month, employees, schedules, exceptions, onC
   };
 
   const getCellData = (date: Date, hour: number) => {
-    const availableEmployees: Employee[] = [];
-    const unavailableEmployees: { employee: Employee; reason: string }[] = [];
-    for (const emp of employees) {
-      const { available, reason } = isEmployeeAvailable(emp, date, hour);
-      if (available) availableEmployees.push(emp);
-      else unavailableEmployees.push({ employee: emp, reason });
+    const availableProfiles: Profile[] = [];
+    const unavailableProfiles: { profile: Profile; reason: string }[] = [];
+    for (const prof of profiles) {
+      const { available, reason } = isProfileAvailable(prof, date, hour);
+      if (available) availableProfiles.push(prof);
+      else unavailableProfiles.push({ profile: prof, reason });
     }
     return {
-      availableCount: availableEmployees.length,
-      totalCount: employees.length,
-      availableEmployees,
-      unavailableEmployees,
+      availableCount: availableProfiles.length,
+      totalCount: profiles.length,
+      availableProfiles,
+      unavailableProfiles,
     };
-  }; 
+  };
 
   const getCellColor = (percent: number): string => {
     if (percent >= 70) return '#D1FFD7';
@@ -81,8 +85,8 @@ export function TeamHeatmap({ year, month, employees, schedules, exceptions, onC
   const handleClick = (date: Date, hour: number) => {
     const dateKey = `${format(date, 'yyyy-MM-dd')}-${hour}`;
     setSelectedCellKey(dateKey);
-    const { availableEmployees, unavailableEmployees } = getCellData(date, hour);
-    onCellClick(date, hour, availableEmployees, unavailableEmployees);
+    const { availableProfiles, unavailableProfiles } = getCellData(date, hour);
+    onCellClick(date, hour, availableProfiles, unavailableProfiles);
   };
 
   return (

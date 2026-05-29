@@ -44,7 +44,6 @@ const getTypeLabel = (type: string) => {
     default: return type;
   }
 };
-
 const getIcon = (type: string) => {
   switch (type) {
     case 'sick_leave': return <SickIcon />;
@@ -64,11 +63,10 @@ interface WorkExceptionsProps {
   exceptions: ScheduleException[];
   employeeId: number;
   onExceptionAdded?: () => void;
+  minHeight?: string | number; 
 }
 
-export function WorkExceptions({ exceptions, employeeId, onExceptionAdded }: WorkExceptionsProps) {
-
-
+export function WorkExceptions({ exceptions, employeeId, onExceptionAdded, minHeight }: WorkExceptionsProps) {
   const [newType, setNewType] = useState('vacation');
   const [newStartDate, setNewStartDate] = useState<Date | undefined>(undefined);
   const [newEndDate, setNewEndDate] = useState<Date | undefined>(undefined);
@@ -99,10 +97,14 @@ export function WorkExceptions({ exceptions, employeeId, onExceptionAdded }: Wor
     }
   };
 
+  const listStyle: React.CSSProperties = minHeight
+  ? { minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight, overflowY: "auto" }
+  : { overflowY: "auto" };
+
   return (
     <div className="components-data">
       <div className="title">Исключения</div>
-      <div className="pers-data-list-exceptions" style={{ maxHeight: '130px', overflowY: 'auto' }}>
+      <div className="pers-data-list-exceptions" style={listStyle}>
         {exceptions.map((exc) => (
           <div key={exc.id} className="excep-item">
             <div className="excep-item-title">{getIcon(exc.type)}</div>

@@ -1,9 +1,8 @@
-import { useState, useMemo } from "react";
+// src/pages/Panel/risk/RiskPage.tsx
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { columns, RiskRowData } from "./riskTableColumns";
 import { RiskDetailPanel } from "./RiskDetailPanel";
-import { mockEmployees } from "@/mocks/teamData";
-import { riskData } from "./riskData";
 import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from "@/components/ui/select";
 import { SearchIcon } from "lucide-react";
 import {
@@ -11,104 +10,112 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { api } from "@/lib/apiClient";
+import type { Profile, Team } from "@/api/data-contracts";
+import { calculateRiskMetrics } from "./riskCalculator";
 import "./risk.css";
 
-// Маппинг отдела по team_id
-const departmentMap: Record<number, string> = {
-  1: "it",
-  2: "marketing",
-  3: "admin",
-};
-
-// Функция определения группы риска на основе интегрального риска
-const getRiskGroup = (integralRisk: number): string => {
-  if (integralRisk >= 80) return "high";
-  if (integralRisk >= 50) return "medium";
-  return "low";
-};
-
 export function RiskPage() {
-  // Состояния фильтров
-  const [selectedPeriod, setSelectedPeriod] = useState("month");
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedPeriod, setSelectedPeriod] = useState("30");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
   const [selectedRiskGroup, setSelectedRiskGroup] = useState("all");
-  const [selectedSort, setSelectedSort] = useState("name");
+  const [selectedSort, setSelectedSort] = useState("risk");
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Состояние выбранного сотрудника
-  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
-  const [selectedDetails, setSelectedDetails] = useState<any>(null);
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [selectedRowId, setSelectedRowId] = useState<number | null>(null);
 
-  // Фильтрация сотрудников
-  const filteredEmployees = useMemo(() => {
-    let filtered = [...mockEmployees];
+  const loadData = useCallback(async () => {
+    try {
+      const [profilesRes, teamsRes] = await Promise.all([
+        api.getAllProfilesApiProfilesGet(),
+        api.getAllTeamsApiTeamsGet(),
+      ]);
+      setProfiles(Array.isArray(profilesRes.data) ? profilesRes.data : []);
+      setTeams(Array.isArray(teamsRes.data) ? teamsRes.data : []);
+    } catch (err) {
+      console.error("Ошибка загрузки данных", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Расчёт данных для таблицы (сортировка, фильтрация)
+  const tableData = useMemo((): RiskRowData[] => {
+    if (profiles.length === 0) return [];
+
+    // Преобразуем профили в строки с рассчитанными метриками
+    let rows: RiskRowData[] = profiles.map(profile => {
+      const metrics = calculateRiskMetrics(profile, 
+        selectedPeriod === "7" ? "week" : selectedPeriod === "30" ? "month" : "quarter"
+      );
+      return {
+        id: profile.employee!.id,
+        fullName: `${profile.employee!.last_name} ${profile.employee!.first_name}`,
+        actuality: metrics.actuality,
+        meetingsOutsideTimeCount: metrics.meetingsOutsideTimeCount,
+        conflictsCount: metrics.conflictsCount,
+        load: metrics.load,
+        timezone: profile.schedule?.time_zone || "—",
+        integralRisk: metrics.integralRisk,
+      };
+    });
 
     // Фильтр по отделу
     if (selectedDepartment !== "all") {
-      filtered = filtered.filter(emp => departmentMap[emp.team_id] === selectedDepartment);
+      rows = rows.filter(row => {
+        const profile = profiles.find(p => p.employee?.id === row.id);
+        return profile?.employee?.team_id === parseInt(selectedDepartment);
+      });
     }
 
-    // Фильтр по поиску (по фио)
+    // Фильтр по поиску
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(emp =>
-        `${emp.last_name} ${emp.first_name}`.toLowerCase().includes(query)
-      );
+      rows = rows.filter(row => row.fullName.toLowerCase().includes(query));
     }
 
     // Фильтр по группе риска
     if (selectedRiskGroup !== "all") {
-      filtered = filtered.filter(emp => {
-        const details = riskData[emp.id];
-        const group = getRiskGroup(details?.integralRisk ?? 0);
-        return group === selectedRiskGroup;
+      rows = rows.filter(row => {
+        if (selectedRiskGroup === "high") return row.integralRisk >= 80;
+        if (selectedRiskGroup === "medium") return row.integralRisk >= 50 && row.integralRisk < 80;
+        if (selectedRiskGroup === "low") return row.integralRisk < 50;
+        return true;
       });
     }
 
     // Сортировка
-    filtered.sort((a, b) => {
-      const detailsA = riskData[a.id];
-      const detailsB = riskData[b.id];
+    rows.sort((a, b) => {
       switch (selectedSort) {
         case "name":
-          return `${a.last_name} ${a.first_name}`.localeCompare(`${b.last_name} ${b.first_name}`);
+          return a.fullName.localeCompare(b.fullName);
         case "risk":
-          return (detailsB?.integralRisk ?? 0) - (detailsA?.integralRisk ?? 0);
+          return b.integralRisk - a.integralRisk;
         case "load":
-          return (detailsB?.load ?? 0) - (detailsA?.load ?? 0);
+          return b.load - a.load;
         default:
           return 0;
       }
     });
 
-    return filtered;
-  }, [selectedDepartment, searchQuery, selectedRiskGroup, selectedSort]);
+    return rows;
+  }, [profiles, selectedDepartment, searchQuery, selectedRiskGroup, selectedSort, selectedPeriod]);
 
-  // Формирование данных для таблицы
-  const getRiskData = useMemo((): RiskRowData[] => {
-    return filteredEmployees.map(emp => {
-      const detail = riskData[emp.id];
-      return {
-        id: emp.id,
-        fullName: `${emp.last_name} ${emp.first_name}`,
-        actuality: detail?.actuality || { status: "—", percent: 0 },
-        meetingsOutsideTimeCount: detail?.meetingsOutsideTime?.length || 0,
-        conflictsCount: detail?.conflicts?.length || 0,
-        load: detail?.load || 0,
-        timezone: detail?.timezone || "—",
-        integralRisk: detail?.integralRisk || 0,
-      };
-    });
-  }, [filteredEmployees]);
-
-  const handleRowClick = (rowData: RiskRowData) => {
-    setSelectedRowId(rowData.id);
-    const employee = mockEmployees.find(emp => emp.id === rowData.id);
-    const details = riskData[rowData.id];
-    setSelectedEmployee(employee);
-    setSelectedDetails(details);
+  const handleRowClick = (row: RiskRowData) => {
+    setSelectedRowId(row.id);
+    const profile = profiles.find(p => p.employee?.id === row.id) || null;
+    setSelectedProfile(profile);
   };
+
+  if (loading) return <div className="risk-loading">Загрузка данных...</div>;
+  if (profiles.length === 0) return <div className="risk-empty">Нет данных о сотрудниках</div>;
 
   return (
     <div className="risk-page">
@@ -116,69 +123,62 @@ export function RiskPage() {
         {/* Период */}
         <div className="risk-period-f">
           <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-            <SelectTrigger className="w-[180px] pl-[10px]">
-              <SelectValue placeholder="Выбрать период" />
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Период" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup>
-                <SelectItem value="week">Неделя</SelectItem>
-                <SelectItem value="month">Месяц</SelectItem>
-                <SelectItem value="quarter">Квартал</SelectItem>
-              </SelectGroup>
+              <SelectItem value="7">Неделя</SelectItem>
+              <SelectItem value="30">Месяц</SelectItem>
+              <SelectItem value="90">Квартал</SelectItem>
             </SelectContent>
           </Select>
         </div>
         {/* Отдел */}
         <div className="risk-otdel-f">
           <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-            <SelectTrigger className="w-[180px] pl-[10px]">
-              <SelectValue placeholder="Выбрать отдел" />
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Отдел" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">Все отделы</SelectItem>
-                <SelectItem value="it">ИТ</SelectItem>
-                <SelectItem value="marketing">Маркетинг</SelectItem>
-                <SelectItem value="admin">Администрация</SelectItem>
-              </SelectGroup>
+              <SelectItem value="all">Все отделы</SelectItem>
+              {teams.map(team => (
+                <SelectItem key={team.id} value={team.id.toString()}>
+                  {team.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
         {/* Группа риска */}
         <div className="risk-group-f">
           <Select value={selectedRiskGroup} onValueChange={setSelectedRiskGroup}>
-            <SelectTrigger className="w-[180px] pl-[10px]">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Группа риска" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">Все группы</SelectItem>
-                <SelectItem value="high">Высокий</SelectItem>
-                <SelectItem value="medium">Средний</SelectItem>
-                <SelectItem value="low">Низкий</SelectItem>
-              </SelectGroup>
+              <SelectItem value="all">Все</SelectItem>
+              <SelectItem value="high">Высокий (≥80)</SelectItem>
+              <SelectItem value="medium">Средний (50–79)</SelectItem>
+              <SelectItem value="low">Низкий (&lt;50)</SelectItem>
             </SelectContent>
           </Select>
         </div>
         {/* Сортировка */}
         <div className="risk-sort-f">
           <Select value={selectedSort} onValueChange={setSelectedSort}>
-            <SelectTrigger className="w-[180px] pl-[10px]">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Сортировка" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup>
-                <SelectItem value="name">По имени</SelectItem>
-                <SelectItem value="risk">По риску</SelectItem>
-                <SelectItem value="load">По нагрузке </SelectItem>
-              </SelectGroup>
+              <SelectItem value="name">По имени</SelectItem>
+              <SelectItem value="risk">По риску</SelectItem>
+              <SelectItem value="load">По нагрузке</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="risk-search-f">
           <InputGroup className="bg-white shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] !px-[10px] gap-2 rounded-md">
             <InputGroupInput
-              id="inline-start-input"
               placeholder="Поиск..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -194,13 +194,15 @@ export function RiskPage() {
         <div className="risk-table">
           <DataTable
             columns={columns}
-            data={getRiskData}
+            data={tableData}
             onRowClick={handleRowClick}
             selectedRowId={selectedRowId}
           />
         </div>
         <div className="risk-user-info">
-          <RiskDetailPanel employee={selectedEmployee} details={selectedDetails} />
+          <RiskDetailPanel profile={selectedProfile} period={
+            selectedPeriod === "7" ? "week" : selectedPeriod === "30" ? "month" : "quarter"
+          } />
         </div>
       </div>
     </div>

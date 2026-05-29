@@ -16,10 +16,9 @@ export function Accuracy({ scheduleId, onConfirm }: AccuracyProps) {
     try {
       const current = await api.getScheduleByIdApiSchedulesIdGet(scheduleId);
       const schedule = current.data;
-      // Преобразуем дни: из 0-based в 1-based (сервер ожидает 1..7)
-      const workDays = schedule.work_days.map((d: number) => d + 1);
+      // Отправляем дни как есть (они уже в формате 1..7)
       const updatePayload = {
-        work_days: workDays,
+        work_days: schedule.work_days,
         time_zone: schedule.time_zone,
         work_format: schedule.work_format,
         start_at: schedule.start_at,

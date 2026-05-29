@@ -1,6 +1,4 @@
-// src/pages/Panel/employee/EmployeePage.tsx
-import { Employee } from "@/mocks/teamData";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Select, SelectContent, SelectItem, SelectValue, SelectGroup, SelectTrigger } from '@/components/ui/select';
 import { SearchIcon, UserRoundPlus } from 'lucide-react';
 import {
@@ -10,60 +8,73 @@ import {
 } from "@/components/ui/input-group";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { mockEmployees as initialEmployees } from "@/mocks/teamData";
-import { employeeDetails as initialDetails, EmployeePersonal } from "./employeeDetails";
-import { riskData as initialRiskData, EmployeeRiskDetails } from "../risk/riskData";
 import { employeeColumns, EmployeeRowData } from "./employeeColumns";
 import { EmployeeDetailPanel } from "./EmployeeDetailPanel";
+import { api } from "@/lib/apiClient";
+import type { Employee, Team, Schedule, ScheduleException } from "@/api/data-contracts";
+import { Role, WorkFormat } from "@/api/data-contracts";
 import './employee.css';
 
-const departmentMap: Record<number, string> = {
-  1: "IT",
-  2: "Маркетинг",
-  3: "Администрация",
-};
-
-const getDepartmentFromId = (teamId: number): string => departmentMap[teamId] || "—";
-
-const getNextId = (employees: typeof initialEmployees): number => {
-  const maxId = Math.max(...employees.map(e => e.id), 0);
-  return maxId + 1;
-};
-
 export function EmployeePage() {
-  const [employees, setEmployees] = useState(initialEmployees);
-  const [employeeDetailsMap, setEmployeeDetailsMap] = useState(initialDetails);
-  const [riskDataMap, setRiskDataMap] = useState(initialRiskData);
-  const [selectedMonth, setSelectedMonth] = useState("5");
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [exceptions, setExceptions] = useState<ScheduleException[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [selectedRowId, setSelectedRowId] = useState<number | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+
+  const loadAllData = useCallback(async () => {
+    try {
+      const [empRes, teamRes, schedRes, excRes] = await Promise.all([
+        api.getAllEmployeesApiEmployeesGet(),
+        api.getAllTeamsApiTeamsGet(),
+        api.getAllSchedulesApiSchedulesGet(),
+        api.getAllScheduleExceptionsApiScheduleExceptionsGet(),
+      ]);
+      setEmployees(empRes.data);
+      setTeams(teamRes.data);
+      setSchedules(schedRes.data);
+      setExceptions(excRes.data);
+    } catch (err) {
+      console.error("Ошибка загрузки данных", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadAllData();
+  }, [loadAllData]);
+
+  const getTeamName = (teamId: number | null) => {
+    if (!teamId) return "—";
+    const team = teams.find(t => t.id === teamId);
+    return team?.name || "—";
+  };
 
   const tableData = useMemo((): EmployeeRowData[] => {
     let filtered = [...employees];
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(emp =>
-        `${emp.last_name} ${emp.first_name}`.toLowerCase().includes(q) ||
-        (emp.email && emp.email.toLowerCase().includes(q)) ||
-        (emp.position && emp.position.toLowerCase().includes(q))
+        `${emp.last_name} ${emp.first_name}`.toLowerCase().includes(q)
       );
     }
     return filtered.map(emp => ({
       id: emp.id,
       fullName: `${emp.last_name} ${emp.first_name}`,
-      department: getDepartmentFromId(emp.team_id),
-      position: emp.position || "—",
-      email: emp.email || "",
+      department: getTeamName(emp.team_id),
     }));
-  }, [employees, searchQuery]);
+  }, [employees, searchQuery, teams]);
 
   const handleRowClick = (row: EmployeeRowData) => {
     setIsCreating(false);
     setSelectedRowId(row.id);
-    const emp = employees.find(e => e.id === row.id);
-    setSelectedEmployee(emp || null);
+    const emp = employees.find(e => e.id === row.id) || null;
+    setSelectedEmployee(emp);
   };
 
   const handleAddNew = () => {
@@ -72,62 +83,53 @@ export function EmployeePage() {
     setSelectedRowId(null);
   };
 
-  const handleSaveNew = (newEmployeeData: {
-    employee: {
-      first_name: string;
-      last_name: string;
-      position: string;
-      email: string;
-      team_id: number;
-    };
-    details: EmployeePersonal;
-    timezone: string;
+  const handleSaveNew = async (newData: {
+    employee: { first_name: string; last_name: string; email: string; team_id: number };
+    schedule: { work_days: number[]; time_zone: string; work_format: WorkFormat; start_at: string; end_at: string };
   }) => {
-    const newId = getNextId(employees);
-    const newEmployee: Employee = {
-      id: newId,
-      first_name: newEmployeeData.employee.first_name,
-      last_name: newEmployeeData.employee.last_name,
-      user_id: newId,
-      team_id: newEmployeeData.employee.team_id,
-      is_active: true,
-      patronymic: undefined,
-      position: newEmployeeData.employee.position,
-      email: newEmployeeData.employee.email,
-    };
-    setEmployees(prev => [...prev, newEmployee]);
-
-    const newDetails = { ...newEmployeeData.details, id: newId };
-    setEmployeeDetailsMap(prev => ({ ...prev, [newId]: newDetails }));
-
-    const newRisk: EmployeeRiskDetails = {
-      actuality: { status: "Подтверждена", days: 0, percent: 100 },
-      meetingsOutsideTime: [],
-      conflicts: [],
-      load: 0,
-      timezone: newEmployeeData.timezone,
-      integralRisk: 0,
-    };
-    setRiskDataMap(prev => ({ ...prev, [newId]: newRisk }));
-
-    setIsCreating(false);
-    setSelectedEmployee(newEmployee);
-    setSelectedRowId(newId);
-    alert(`Сотрудник ${newEmployee.last_name} ${newEmployee.first_name} добавлен`);
+    try {
+      const userRes = await api.registerAnyUserApiUsersPost({
+        email: newData.employee.email,
+        password: "temp123",
+        role: Role.Employee,
+      });
+      const userId = userRes.data.id;
+      const empRes = await api.createEmployeeApiEmployeesPost({
+        first_name: newData.employee.first_name,
+        last_name: newData.employee.last_name,
+        team_id: newData.employee.team_id,
+        user_id: userId,
+      });
+      const employeeId = empRes.data.id;
+      await api.createScheduleApiSchedulesPost({
+        work_days: newData.schedule.work_days.map((d: number) => d + 1), // 0→1
+        time_zone: newData.schedule.time_zone,
+        work_format: newData.schedule.work_format,
+        start_at: newData.schedule.start_at,
+        end_at: newData.schedule.end_at,
+        employee_id: employeeId,
+      });
+      alert("Сотрудник успешно добавлен");
+      await loadAllData();
+      setIsCreating(false);
+    } catch (err) {
+      console.error("Ошибка создания сотрудника", err);
+      alert("Не удалось создать сотрудника");
+    }
   };
 
   const handleCancelCreate = () => {
     setIsCreating(false);
   };
 
-  const getCurrentEmployeeDetails = (emp: any) => employeeDetailsMap[emp.id];
-  const getCurrentRiskData = (emp: any) => riskDataMap[emp.id];
+  if (loading) return <div className="employee-loading">Загрузка...</div>;
+  if (employees.length === 0) return <div className="employee-empty">Нет данных о сотрудниках</div>;
 
   return (
     <div className="employee-page">
       <div className="employee-filters">
         <div className="mep-period-f">
-          <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+          <Select value="5" onValueChange={() => {}}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Выбрать месяц" />
             </SelectTrigger>
@@ -143,8 +145,7 @@ export function EmployeePage() {
         <div className="risk-search-f">
           <InputGroup className="bg-white shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] !px-[10px] gap-2 rounded-md w-72">
             <InputGroupInput
-              id="inline-start-input"
-              placeholder="ФИО/Gmail/должность"
+              placeholder="ФИО"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -180,6 +181,7 @@ export function EmployeePage() {
               key="creating-mode"
               employee={null}
               isCreating={true}
+              teams={teams}
               onSaveNew={handleSaveNew}
               onCancelCreate={handleCancelCreate}
             />
@@ -187,14 +189,51 @@ export function EmployeePage() {
             <EmployeeDetailPanel
               key={selectedEmployee.id}
               employee={selectedEmployee}
-              detailsData={getCurrentEmployeeDetails(selectedEmployee)}
-              riskData={getCurrentRiskData(selectedEmployee)}
-              onSave={(updated) => {
-                setEmployees(prev => prev.map(emp => emp.id === updated.employee.id ? updated.employee : emp));
-                setEmployeeDetailsMap(prev => ({ ...prev, [updated.employee.id]: updated.details }));
-                setRiskDataMap(prev => ({ ...prev, [updated.employee.id]: { ...prev[updated.employee.id], timezone: updated.timezone } }));
+              schedule={schedules.find(s => s.employee_id === selectedEmployee.id) || null}
+              exceptions={exceptions.filter(e => e.employee_id === selectedEmployee.id)}
+              teams={teams}
+              onSave={async (updated) => {
+              try {
+                let teamId = updated.employee.team_id;
+                if (teamId === null || teamId === undefined) {
+                  if (teams.length > 0) teamId = teams[0].id;
+                  else { alert("Нет доступных отделов"); return; }
+                }
+                await api.updateEmployeeApiEmployeesPut({ id: updated.employee.id }, {
+                  first_name: updated.employee.first_name,
+                  last_name: updated.employee.last_name,
+                  team_id: Number(teamId),
+                });
+
+                if (updated.schedule && updated.schedule.id) {
+                  await api.updateScheduleApiSchedulesIdPut(updated.schedule.id, {
+                    work_days: updated.schedule.work_days.map((d: number) => d + 1),
+                    time_zone: updated.schedule.time_zone,
+                    work_format: updated.schedule.work_format,
+                    start_at: updated.schedule.start_at,
+                    end_at: updated.schedule.end_at,
+                  });
+                }
+                await loadAllData();
                 alert("Изменения сохранены");
-              }}
+              } catch (err: any) {
+                console.error("Ошибка сохранения", err);
+                let errorMsg = "Ошибка сохранения";
+                if (err.response?.data?.detail) {
+                  const detail = err.response.data.detail;
+                  if (Array.isArray(detail)) {
+                    errorMsg = detail.map((d: any) => d.msg || JSON.stringify(d)).join(", ");
+                  } else if (typeof detail === "string") {
+                    errorMsg = detail;
+                  } else {
+                    errorMsg = JSON.stringify(detail);
+                  }
+                } else if (err.message) {
+                  errorMsg = err.message;
+                }
+                alert(errorMsg);
+              }
+            }}
             />
           ) : (
             <div className="employee-detail-empty">
